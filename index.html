@@ -16,11 +16,11 @@
     <style>
         body {
             font-family: 'Noto Sans TC', 'Comfortaa', sans-serif;
-            background: radial-gradient(circle at center, #1e112a 0%, #0b0514 100%);
+            background: radial-gradient(circle at center, #130a1c 0%, #05020a 100%);
             overflow-x: hidden;
         }
         
-        /* 霓虹發光效果 */
+        /* 霓虹發光與邊框效果 */
         .neon-border {
             box-shadow: 0 0 15px rgba(168, 85, 247, 0.4), inset 0 0 15px rgba(168, 85, 247, 0.2);
         }
@@ -34,7 +34,7 @@
             text-shadow: 0 0 10px rgba(59, 130, 246, 0.8), 0 0 20px rgba(59, 130, 246, 0.4);
         }
 
-        /* 骰子3D旋轉動畫 */
+        /* 3D 骰子旋轉動畫 */
         .dice-scene {
             perspective: 400px;
         }
@@ -57,7 +57,6 @@
             justify-content: center;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.3), 0 0 10px rgba(168, 85, 247, 0.5);
         }
-        /* 骰子面朝向 */
         .face-1 { transform: rotateY(0deg) translateZ(30px); }
         .face-2 { transform: rotateY(90deg) translateZ(30px); }
         .face-3 { transform: rotateX(90deg) translateZ(30px); }
@@ -89,7 +88,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect } = React;
 
         // --- Web Audio 音效產生器 ---
         const playSound = (type) => {
@@ -101,7 +100,6 @@
                 gain.connect(ctx.destination);
 
                 if (type === 'roll') {
-                    // 模擬骰子滾動聲 (短促低音爆裂)
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(100, ctx.currentTime);
                     osc.frequency.exponentialRampToValueAtTime(10, ctx.currentTime + 0.1);
@@ -110,7 +108,6 @@
                     osc.start();
                     osc.stop(ctx.currentTime + 0.15);
                 } else if (type === 'land') {
-                    // 抵達安全或普通格
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(300, ctx.currentTime);
                     osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.2);
@@ -119,7 +116,6 @@
                     osc.start();
                     osc.stop(ctx.currentTime + 0.3);
                 } else if (type === 'punish') {
-                    // 悲慘處罰
                     osc.type = 'sawtooth';
                     osc.frequency.setValueAtTime(180, ctx.currentTime);
                     osc.frequency.linearRampToValueAtTime(90, ctx.currentTime + 0.4);
@@ -128,7 +124,6 @@
                     osc.start();
                     osc.stop(ctx.currentTime + 0.5);
                 } else if (type === 'card') {
-                    // 抽出卡牌
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(440, ctx.currentTime);
                     osc.frequency.setValueAtTime(554, ctx.currentTime + 0.1);
@@ -139,7 +134,7 @@
                     osc.stop(ctx.currentTime + 0.5);
                 }
             } catch (e) {
-                console.log("Audio not supported yet.");
+                console.log("Audio context activation requested.");
             }
         };
 
@@ -147,25 +142,25 @@
         const initialTiles = [
             { id: 0, name: "起點", type: "pink", desc: "安全出發點，摸摸頭打氣" },
             { id: 1, name: "打屁股20下", type: "red", desc: "使用【手】打屁股20下" },
-            { id: 2, name: "木板打屁股15下", type: "red", desc: "使用【木板】 打屁股15下" },
+            { id: 2, name: "木板打陰莖15下", type: "red", desc: "使用【木板】打屁股15下" },
             { id: 3, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 4, name: "打屁股15下", type: "red", desc: "使用【黑膠條】打屁股15下" },
             { id: 5, name: "向前３步", type: "blue", desc: "幸運快速前進！" },
-            { id: 6, name: "打手10下", type: "orange", desc: "使用【乒乓拍】打手10下" },
-            { id: 7, name: "壓克力拍 打屁股15下", type: "red", desc: "使用【壓克力拍】打屁股15下" },
-            { id: 8, name: "對方(主)選工具打屁股15下", type: "red", desc: "貝請主任選工具打屁股15下" },
+            { id: 6, name: "手打10下", type: "orange", desc: "使用【巴掌】打屁股10下" },
+            { id: 7, name: "壓克力拍打屁股15下", type: "red", desc: "使用【壓克力拍】打屁股15下" },
+            { id: 8, name: "對方選工具打蛋蛋15下", type: "red", desc: "任選工具輕擊蛋蛋15下" },
             { id: 9, name: "安全沒事", type: "pink", desc: "暫時安全，喝口水休息一下" },
-            { id: 10, name: "打雞雞10下", type: "red", desc: "使用【熱熔條】打陰莖10下(輕打)" },
-            { id: 11, name: "熱熔條打龜頭10下", type: "red", desc: "使用【熱熔條】敲擊龜頭10下" },
+            { id: 10, name: "打屁股10下", type: "red", desc: "使用【大力拍】打屁股10下" },
+            { id: 11, name: "黑膠條打菊花10下", type: "red", desc: "使用【黑膠條】打菊花10下" },
             { id: 12, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 13, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 14, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 15, name: "打屁股15下", type: "orange", desc: "普通打屁股15下" },
-            { id: 16, name: "藤條打屁股10下", type: "red", desc: "使用【藤條】打屁股10下" },
+            { id: 16, name: "打屁股10下", type: "red", desc: "任選打屁股10下" },
             { id: 17, name: "對方選工具安全沒事", type: "pink", desc: "好險！對方選了工具但免罰" },
             { id: 18, name: "打屁股20下", type: "orange", desc: "普通打屁股20下" },
             { id: 19, name: "小紅打屁股30下", type: "red", desc: "使用【小紅】痛擊屁股30下" },
-            { id: 20, name: "對方選工具打蛋蛋5下", type: "red", desc: "對方選工具敲擊蛋蛋5下" },
+            { id: 20, name: "對方選工具打5下", type: "red", desc: "給對方選工打屁股5下" },
             { id: 21, name: "腳踩一下", type: "orange", desc: "接受腳踩伺候" },
             { id: 22, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 23, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
@@ -177,10 +172,10 @@
             { id: 29, name: "安全沒事", type: "pink", desc: "安全度過這回合" },
             { id: 30, name: "打小菊10下", type: "red", desc: "使用【藤條】打小菊10下" },
             { id: 31, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
-            { id: 32, name: "打龜頭5下", type: "red", desc: "使用【小紅】打龜頭5下" },
+            { id: 32, name: "打屁股15下", type: "red", desc: "使用【浴刷】打屁股5下" },
             { id: 33, name: "向後５步", type: "blue", desc: "退後5步！接受命運倒退" },
             { id: 34, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
-            { id: 35, name: "終極懲罰：四種工具各20下", type: "red", desc: "屁股被四種各打20下！(其中必須包含藤條)" }
+            { id: 35, name: "終極懲罰：四種工具各20下", type: "red", desc: "選擇四種各打20下！(必須包含藤條)" }
         ];
 
         // --- 預設卡牌庫 ---
@@ -219,7 +214,7 @@
             { id: 32, text: "手指插小菊30秒", type: "action" },
             { id: 33, text: "手指插小菊1分鐘", type: "action" },
             { id: 34, text: "手指插小菊3分鐘", type: "action" },
-            { id: 35, text: "電擊器1~3分鐘", type: "action" },
+            { id: 35, text: "罰站3分鐘", type: "action" },
             { id: 36, text: "插尿道1分鐘", type: "action" },
             { id: 37, text: "搔癢30秒", type: "action" },
             { id: 38, text: "搔癢1分鐘", type: "action" },
@@ -235,34 +230,55 @@
             { id: 48, text: "再抽一次", type: "draw-again" }
         ];
 
+        // 霓虹代表色
+        const colorPalette = [
+            { id: "pink", name: "霓虹粉", bg: "bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.8)]", text: "text-pink-400" },
+            { id: "purple", name: "霓虹紫", bg: "bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.8)]", text: "text-purple-400" },
+            { id: "blue", name: "天空藍", bg: "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]", text: "text-blue-400" },
+            { id: "emerald", name: "薄荷綠", bg: "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]", text: "text-emerald-400" },
+            { id: "yellow", name: "奢華黃", bg: "bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.8)]", text: "text-yellow-400" },
+            { id: "red", name: "狂暴紅", bg: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]", text: "text-red-400" },
+            { id: "cyan", name: "科技青", bg: "bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)]", text: "text-cyan-400" },
+            { id: "orange", name: "火焰橙", bg: "bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.8)]", text: "text-orange-400" }
+        ];
+
         function App() {
-            // 遊戲基礎狀態
+            // 遊戲核心與編輯狀態
             const [tiles, setTiles] = useState(initialTiles);
             const [cardDeck, setCardDeck] = useState(initialCards);
-            const [players, setPlayers] = useState([
-                { id: 1, name: "主人", color: "pink", position: 0, avoidCount: 0, reduceAmount: 0 },
-                { id: 2, name: "小奴", color: "purple", position: 0, avoidCount: 0, reduceAmount: 0 }
-            ]);
-            const [activePlayerIdx, setActivePlayerIdx] = useState(0);
             
-            // 骰子與步數狀態
+            // 玩家狀態 - 新增 lap (圈數), punishCount (被打次數) 
+            const [players, setPlayers] = useState([
+                { id: 1, name: "主人", color: "pink", position: 0, avoidCount: 0, reduceAmount: 0, lap: 1, punishCount: 0 },
+                { id: 2, name: "小奴", color: "purple", position: 0, avoidCount: 0, reduceAmount: 0, lap: 1, punishCount: 0 }
+            ]);
+            
+            const [activePlayerIdx, setActivePlayerIdx] = useState(0);
+            const [gameState, setGameState] = useState("setup"); // setup (大廳管理) 或 playing (遊戲進行中)
+            const [maxLaps, setMaxLaps] = useState(2); // 預設目標圈數：2圈
+            const [winner, setWinner] = useState(null); // 終局獲勝玩家
+            
+            // 大廳編輯新增玩家暫存
+            const [tempPlayerName, setTempPlayerName] = useState("");
+            const [tempPlayerColor, setTempPlayerColor] = useState("blue");
+
+            // 骰子狀態
             const [diceVal, setDiceVal] = useState(1);
             const [isRolling, setIsRolling] = useState(false);
             const [rotation, setRotation] = useState({ x: 0, y: 0 });
 
-            // 遊戲彈窗與對話框
+            // 彈窗
             const [drawnCard, setDrawnCard] = useState(null);
-            const [activePunishment, setActivePunishment] = useState(null); // 當前正要執行的懲罰描述
-            const [gameLogs, setGameLogs] = useState(["✨ 歡迎來到霓虹大富翁，準備好受罰了嗎？"]);
+            const [activePunishment, setActivePunishment] = useState(null);
+            const [gameLogs, setGameLogs] = useState(["✨ 歡迎來到多人霓虹調教大富翁！請在上方設定您的遊戲人數與圈數。"]);
             const [activeTab, setActiveTab] = useState("board"); // board, custom-tiles, custom-cards, rule
 
-            // 編輯器暫存狀態
+            // 編輯器暫存
             const [editingTile, setEditingTile] = useState(null);
             const [newCardText, setNewCardText] = useState("");
             const [newCardType, setNewCardType] = useState("action");
             const [newCardValue, setNewCardValue] = useState("");
 
-            // 骰子轉動方向 mapping
             const diceRotations = {
                 1: { x: 0, y: 0 },
                 2: { x: 0, y: -90 },
@@ -272,7 +288,6 @@
                 6: { x: 0, y: 180 }
             };
 
-            // 10x10 棋盤坐標分佈 (0 ~ 35 周圍格子)
             const getCoordinates = (idx) => {
                 if (idx >= 0 && idx <= 9) return { row: 1, col: idx + 1 };
                 if (idx >= 10 && idx <= 17) return { row: idx - 9 + 1, col: 10 };
@@ -281,41 +296,80 @@
                 return { row: 1, col: 1 };
             };
 
-            // 新增事件紀錄
             const addLog = (msg) => {
                 setGameLogs(prev => [msg, ...prev]);
             };
 
-            // 處理玩家位置移動後的事件觸發
-            const handleTileLanding = (pIdx, position, isExtraMove = false) => {
+            const getPlayerBgClass = (colorId) => {
+                const found = colorPalette.find(c => c.id === colorId);
+                return found ? found.bg : "bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.8)]";
+            };
+
+            const getPlayerTextClass = (colorId) => {
+                const found = colorPalette.find(c => c.id === colorId);
+                return found ? found.text : "text-pink-400";
+            };
+
+            // --- 大廳操作 ---
+            const addPlayer = () => {
+                if (!tempPlayerName.trim()) return;
+                if (players.length >= 8) {
+                    alert("⚠️ 人數上限為 8 人！");
+                    return;
+                }
+                const newPlayer = {
+                    id: Date.now(),
+                    name: tempPlayerName.trim(),
+                    color: tempPlayerColor,
+                    position: 0,
+                    avoidCount: 0,
+                    reduceAmount: 0,
+                    lap: 1,
+                    punishCount: 0
+                };
+                setPlayers(prev => [...prev, newPlayer]);
+                setTempPlayerName("");
+                addLog(`👥 新成員【${newPlayer.name}】加入了遊戲。`);
+            };
+
+            const removePlayer = (id) => {
+                if (players.length <= 2) {
+                    alert("⚠️ 遊戲人數至少需要 2 人以上！");
+                    return;
+                }
+                setPlayers(prev => prev.filter(p => p.id !== id));
+            };
+
+            const updatePlayerName = (id, newName) => {
+                setPlayers(prev => prev.map(p => p.id === id ? { ...p, name: newName } : p));
+            };
+
+            // --- 走上格子事件邏輯 ---
+            const handleTileLanding = (pIdx, position) => {
                 const curPlayer = players[pIdx];
                 const tile = tiles[position];
                 playSound('land');
                 
-                addLog(`📍 ${curPlayer.name} 停留在【${tile.name}】`);
+                addLog(`📍 【${curPlayer.name}】 停在 [${position}]：【${tile.name}】`);
 
-                // 黃色方格：卡牌
                 if (tile.type === "yellow") {
                     setTimeout(() => drawCard(pIdx), 1000);
                 } 
-                // 藍色方格：特殊動作
                 else if (tile.type === "blue") {
                     if (tile.name.includes("向前３步")) {
                         setTimeout(() => {
-                            addLog("🚀 觸發向前３步！");
-                            movePlayer(pIdx, 3, true);
+                            addLog(`🚀 觸發【${curPlayer.name}】向前 3 步！`);
+                            movePlayer(pIdx, 3);
                         }, 1200);
                     } else if (tile.name.includes("向後５步")) {
                         setTimeout(() => {
-                            addLog("↩️ 觸發向後５步！");
-                            movePlayer(pIdx, -5, true);
+                            addLog(`↩️ 觸發【${curPlayer.name}】向後 5 步！`);
+                            movePlayer(pIdx, -5);
                         }, 1200);
                     } else if (tile.name.includes("再骰一次")) {
-                        addLog(`🔥 幸運！${curPlayer.name} 獲得再次擲骰機會！`);
-                        // 不轉移回合
+                        addLog(`🔥 【${curPlayer.name}】幸運抽中再骰一次機會！`);
                     }
                 } 
-                // 紅色、橘色：正常懲罰項目
                 else if (tile.type === "red" || tile.type === "orange") {
                     playSound('punish');
                     setActivePunishment({
@@ -327,20 +381,48 @@
                 }
             };
 
-            // 行動玩家移動
-            const movePlayer = (pIdx, steps, isExtraMove = false) => {
+            // 玩家角色移動與圈數計算邏輯
+            const movePlayer = (pIdx, steps) => {
                 setPlayers(prev => {
                     const updated = [...prev];
-                    let nextPos = updated[pIdx].position + steps;
-                    
-                    // 循環環繞
-                    if (nextPos >= 36) nextPos = nextPos - 36;
-                    if (nextPos < 0) nextPos = 36 + nextPos;
+                    let oldPos = updated[pIdx].position;
+                    let nextPos = oldPos + steps;
+                    let lapIncrement = 0;
+
+                    if (steps > 0) {
+                        if (nextPos >= 36) {
+                            lapIncrement = Math.floor(nextPos / 36);
+                            nextPos = nextPos % 36;
+                        }
+                    } else if (steps < 0) {
+                        if (nextPos < 0) {
+                            lapIncrement = -1;
+                            nextPos = 36 + (nextPos % 36);
+                            if (nextPos === 36) nextPos = 0;
+                        }
+                    }
+
+                    // 圈數計算
+                    if (lapIncrement !== 0) {
+                        updated[pIdx].lap = Math.max(1, updated[pIdx].lap + lapIncrement);
+                        addLog(`🚩 【${updated[pIdx].name}】 跨越起點！目前圈數：${updated[pIdx].lap} / ${maxLaps === "unlimited" ? "無限制" : maxLaps}`);
+                        
+                        // 檢查是否達成目標圈數
+                        if (maxLaps !== "unlimited" && updated[pIdx].lap > maxLaps) {
+                            setTimeout(() => {
+                                setWinner(updated[pIdx]);
+                                addLog(`🏆 遊戲結束！【${updated[pIdx].name}】率先完成了 ${maxLaps} 圈挑戰，成為最終贏家！`);
+                            }, 1000);
+                        }
+                    }
 
                     updated[pIdx].position = nextPos;
                     
-                    // 延遲觸發，等待位置更新
-                    setTimeout(() => handleTileLanding(pIdx, nextPos, isExtraMove), 500);
+                    // 只要遊戲沒結束就觸發格子事件
+                    const isGameOver = maxLaps !== "unlimited" && updated[pIdx].lap > maxLaps;
+                    if (!isGameOver) {
+                        setTimeout(() => handleTileLanding(pIdx, nextPos), 500);
+                    }
                     return updated;
                 });
             };
@@ -353,7 +435,6 @@
 
                 let spins = 0;
                 const interval = setInterval(() => {
-                    // 隨機旋轉，製造動態效果
                     setRotation({
                         x: Math.random() * 360,
                         y: Math.random() * 360
@@ -362,17 +443,19 @@
                     if (spins > 8) {
                         clearInterval(interval);
                         
-                        // 決定最後數字
                         const finalNum = Math.floor(Math.random() * 6) + 1;
                         setDiceVal(finalNum);
                         setRotation(diceRotations[finalNum]);
                         setIsRolling(false);
 
-                        addLog(`🎲 ${players[activePlayerIdx].name} 擲出了 ${finalNum} 點！`);
+                        addLog(`🎲 【${players[activePlayerIdx].name}】 擲出了 ${finalNum} 點！`);
                         movePlayer(activePlayerIdx, finalNum);
 
-                        // 判斷是否需要切換玩家（如果沒抽到「再骰一次」格子）
-                        const currentLandingTile = tiles[(players[activePlayerIdx].position + finalNum) % 36];
+                        // 計算下一步落點
+                        const nextTargetIndex = (players[activePlayerIdx].position + finalNum) % 36;
+                        const currentLandingTile = tiles[nextTargetIndex];
+
+                        // 如果沒踩到「再骰一次」，才切換給下一位玩家
                         if (!currentLandingTile.name.includes("再骰一次")) {
                             setActivePlayerIdx(prev => (prev + 1) % players.length);
                         }
@@ -380,77 +463,68 @@
                 }, 100);
             };
 
-            // 抽卡牌
+            // 抽命運卡牌
             const drawCard = (pIdx) => {
                 playSound('card');
                 const randomCard = cardDeck[Math.floor(Math.random() * cardDeck.length)];
                 setDrawnCard({ ...randomCard, playerIdx: pIdx });
-                addLog(`🃏 ${players[pIdx].name} 抽到了卡牌：【${randomCard.text}】`);
+                addLog(`🃏 【${players[pIdx].name}】 抽到了命運卡：【${randomCard.text}】`);
             };
 
-            // 處理抽完卡後的動作
+            // 處理抽牌結果
             const handleCardAction = (card, accept) => {
                 const player = players[card.playerIdx];
                 if (accept) {
                     if (card.type === "keep") {
-                        // 獲得功能卡
                         setPlayers(prev => {
                             const updated = [...prev];
                             if (card.value === "avoid") {
                                 updated[card.playerIdx].avoidCount += 1;
-                                addLog(`🛡️ ${player.name} 將【免死金牌】放入背包。`);
+                                addLog(`🛡️ 【${player.name}】 將【免死金牌】收入背包。`);
                             } else if (card.value.startsWith("reduce-")) {
                                 const amount = parseInt(card.value.split("-")[1]);
                                 updated[card.playerIdx].reduceAmount += amount;
-                                addLog(`🩹 ${player.name} 將【抵免 ${amount} 下】存入背包。`);
+                                addLog(`🩹 【${player.name}】 獲得了折抵 ${amount} 下的次數保護。`);
                             }
                             return updated;
                         });
                     } else if (card.type === "draw-again") {
-                        addLog(`🔄 再次抽卡！`);
+                        addLog(`🔄 【${player.name}】 再次抽取卡牌！`);
                         drawCard(card.playerIdx);
                     } else {
-                        // 執行即時懲罰
                         playSound('punish');
                         setActivePunishment({
-                            title: "卡牌懲罰",
+                            title: "卡牌罰則",
                             desc: card.text,
                             playerIdx: card.playerIdx,
                             isCard: true
                         });
                     }
-                } else {
-                    addLog(`❌ ${player.name} 放棄使用該卡。`);
                 }
                 setDrawnCard(null);
             };
 
-            // 使用免死金牌或抵免
+            // 使用防具或抵免
             const useAvoidCard = (pIdx, type) => {
                 setPlayers(prev => {
                     const updated = [...prev];
                     if (type === "avoid" && updated[pIdx].avoidCount > 0) {
                         updated[pIdx].avoidCount -= 1;
-                        addLog(`🛡️ ${updated[pIdx].name} 使用了【免死金牌】！本次懲罰全免！`);
+                        addLog(`🛡️ 【${updated[pIdx].name}】 使用了【免死金牌】！免除本次處罰（不增加挨打次數）`);
                         setActivePunishment(null);
                     } else if (type === "reduce" && updated[pIdx].reduceAmount > 0) {
-                        // 扣減抵免
-                        const reduction = updated[pIdx].reduceAmount;
-                        updated[pIdx].reduceAmount = 0; // 一次性用完或扣減
-                        addLog(`🩹 ${updated[pIdx].name} 消耗了抵免值，抵消傷害！`);
+                        updated[pIdx].reduceAmount = 0;
+                        addLog(`🩹 【${updated[pIdx].name}】 消耗了所有抵免值，痛楚感大幅度降低。`);
                         setActivePunishment(prev => {
                             if (!prev) return null;
-                            return {
-                                ...prev,
-                                desc: prev.desc + `（已成功抵免/減輕傷害！）`
-                            };
+                            return { ...prev, desc: prev.desc + `（玩家已主動折抵傷害！）` };
                         });
                     }
                     return updated;
                 });
             };
 
-            // 保存棋格編輯
+            // 儲存棋格編輯
             const saveTileEdit = () => {
                 if (!editingTile) return;
                 setTiles(prev => {
@@ -458,7 +532,7 @@
                     updated[editingTile.id] = { ...editingTile };
                     return updated;
                 });
-                addLog(`⚙️ 修改了棋格 ${editingTile.id} 內容為：【${editingTile.name}】`);
+                addLog(`⚙️ 更新了第 ${editingTile.id} 格為：【${editingTile.name}】`);
                 setEditingTile(null);
             };
 
@@ -467,7 +541,7 @@
                 setCardDeck(prev => prev.filter(c => c.id !== id));
             };
 
-            // 新增卡牌
+            // 新增自定義卡牌
             const addNewCard = () => {
                 if (!newCardText.trim()) return;
                 const newCard = {
@@ -479,26 +553,34 @@
                 setCardDeck(prev => [...prev, newCard]);
                 setNewCardText("");
                 setNewCardValue("");
-                addLog(`➕ 新增了卡牌到牌庫：【${newCardText}】`);
+                addLog(`➕ 新増了自訂卡牌到牌庫：【${newCardText}】`);
             };
 
             return (
                 <div class="flex flex-col gap-6 select-none">
+                    
                     {/* Header */}
-                    <header class="flex flex-col md:flex-row items-center justify-between border-b border-purple-900/40 pb-4">
+                    <header class="flex flex-col md:flex-row items-center justify-between border-b border-purple-900/40 pb-4 gap-4">
                         <div class="text-center md:text-left">
-                            <h1 class="text-4xl font-extrabold tracking-wider text-pink-500 neon-text-pink">
-                                NEON BDSM MONOPOLY
+                            <h1 class="text-4xl font-extrabold tracking-wider text-pink-500 neon-text-pink flex items-center gap-3 justify-center md:justify-start">
+                                <i class="fa-solid fa-chess-board animate-spin-slow"></i> MULTIPLAYER NEON MONOPOLY
                             </h1>
                             <p class="text-xs text-purple-400 mt-1 uppercase tracking-widest font-mono">
-                                專為親密伴侶 & 派對打造的調教娛樂大富翁
+                                伴侶 & 派對專用調教大富翁 - 目標圈數配置與累計被打計數系統
                             </p>
                         </div>
-                        <div class="flex gap-2 mt-4 md:mt-0 bg-slate-900/80 p-1.5 rounded-full border border-purple-900/30">
+                        
+                        {/* 導航控制 */}
+                        <div class="flex flex-wrap gap-2 bg-slate-900/85 p-1.5 rounded-full border border-purple-900/30">
                             <button 
-                                onClick={() => setActiveTab("board")} 
-                                class={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${activeTab === "board" ? "bg-purple-600 text-white shadow" : "text-slate-400 hover:text-white"}`}>
-                                🎮 遊戲棋盤
+                                onClick={() => { setActiveTab("board"); setGameState("setup"); }} 
+                                class={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${gameState === "setup" && activeTab === "board" ? "bg-pink-600 text-white shadow-lg shadow-pink-500/30" : "text-slate-400 hover:text-white"}`}>
+                                👥 大廳設定
+                            </button>
+                            <button 
+                                onClick={() => { setActiveTab("board"); setGameState("playing"); }} 
+                                class={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${gameState === "playing" && activeTab === "board" ? "bg-purple-600 text-white shadow-lg shadow-purple-500/30" : "text-slate-400 hover:text-white"}`}>
+                                🎮 開始棋局
                             </button>
                             <button 
                                 onClick={() => setActiveTab("custom-tiles")} 
@@ -508,7 +590,7 @@
                             <button 
                                 onClick={() => setActiveTab("custom-cards")} 
                                 class={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${activeTab === "custom-cards" ? "bg-purple-600 text-white shadow" : "text-slate-400 hover:text-white"}`}>
-                                🃏 牌庫管理
+                                🃏 命運牌庫
                             </button>
                             <button 
                                 onClick={() => setActiveTab("rule")} 
@@ -518,33 +600,144 @@
                         </div>
                     </header>
 
-                    {/* 主區域 */}
-                    {activeTab === "board" && (
+                    {/* --- 大廳 (玩家與目標圈數配置) --- */}
+                    {gameState === "setup" && activeTab === "board" && (
+                        <div class="max-w-4xl mx-auto w-full bg-slate-950/90 p-8 rounded-3xl border border-purple-500/20 neon-border animate-fade-in">
+                            <h2 class="text-3xl font-black text-pink-500 neon-text-pink mb-2 text-center">
+                                👥 派對玩家大廳 Lobby
+                            </h2>
+                            <p class="text-slate-400 text-center text-sm mb-8">
+                                請在此設定「目標遊玩圈數」、新增參賽玩家，並可指派專屬霓虹代表色（支持 2~8 人）。
+                            </p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                
+                                {/* 左側：新增玩家與圈數設定 */}
+                                <div class="bg-slate-900/50 p-6 rounded-2xl border border-purple-950/60 flex flex-col gap-5">
+                                    <h3 class="text-lg font-bold text-purple-300">⚙️ 基礎局設設定</h3>
+                                    
+                                    {/* 圈數自訂 */}
+                                    <div class="flex flex-col gap-2">
+                                        <label class="text-xs text-slate-400">🏁 目標圈數 (達到即結束並結算被打王)</label>
+                                        <select 
+                                            value={maxLaps} 
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                setMaxLaps(val === "unlimited" ? "unlimited" : parseInt(val));
+                                            }}
+                                            class="bg-black/60 border border-purple-900/50 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-purple-500 text-sm">
+                                            <option value={1}>1 圈 (快速快感)</option>
+                                            <option value={2}>2 圈 (標準持久)</option>
+                                            <option value={3}>3 圈 (深度調教)</option>
+                                            <option value={5}>5 圈 (極限挑戰)</option>
+                                            <option value="unlimited">無限制 (戰到一方投降為止)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="border-t border-purple-900/30 pt-3 flex flex-col gap-4">
+                                        <h4 class="text-sm font-bold text-purple-400">➕ 新增派對成員</h4>
+                                        <div class="flex flex-col gap-2">
+                                            <label class="text-xs text-slate-400">玩家名稱 Name</label>
+                                            <input 
+                                                type="text"
+                                                value={tempPlayerName}
+                                                onChange={(e) => setTempPlayerName(e.target.value)}
+                                                placeholder="請輸入玩家名字..."
+                                                class="bg-black/60 border border-purple-900/50 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-purple-500 text-sm"
+                                            />
+                                        </div>
+
+                                        <div class="flex flex-col gap-2">
+                                            <label class="text-xs text-slate-400">代表棋子霓虹色 Color</label>
+                                            <div class="grid grid-cols-4 gap-2">
+                                                {colorPalette.map((color) => (
+                                                    <button 
+                                                        key={color.id}
+                                                        type="button"
+                                                        onClick={() => setTempPlayerColor(color.id)}
+                                                        class={`p-2 rounded-lg border flex flex-col items-center gap-1 transition-all ${
+                                                            tempPlayerColor === color.id 
+                                                            ? 'border-white bg-purple-950/40 ring-2 ring-purple-500' 
+                                                            : 'border-slate-800 opacity-60 hover:opacity-100'
+                                                        }`}>
+                                                        <span class={`w-3.5 h-3.5 rounded-full ${color.bg}`} />
+                                                        <span class="text-[9px] text-slate-300">{color.name}</span>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <button 
+                                            onClick={addPlayer}
+                                            class="py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition-all text-sm">
+                                            加入玩家進入名單
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* 右側：玩家列表 */}
+                                <div class="bg-black/40 p-6 rounded-2xl border border-slate-900 flex flex-col justify-between">
+                                    <div>
+                                        <h3 class="text-lg font-bold text-purple-300 mb-4 flex justify-between">
+                                            <span>📋 參賽名單清單</span>
+                                            <span class="text-pink-400 font-mono text-sm">{players.length} / 8</span>
+                                        </h3>
+                                        <div class="flex flex-col gap-3 max-h-[320px] overflow-y-auto pr-2">
+                                            {players.map((p) => (
+                                                <div 
+                                                    key={p.id}
+                                                    class="bg-slate-900/80 p-3 rounded-xl border border-purple-900/10 flex items-center justify-between gap-3">
+                                                    <div class="flex items-center gap-3">
+                                                        <span class={`w-4 h-4 rounded-full border border-white/20 ${getPlayerBgClass(p.color)}`} />
+                                                        <input 
+                                                            type="text"
+                                                            value={p.name}
+                                                            onChange={(e) => updatePlayerName(p.id, e.target.value)}
+                                                            class="bg-transparent text-slate-200 font-bold focus:outline-none border-b border-transparent focus:border-purple-500 text-sm"
+                                                        />
+                                                    </div>
+                                                    <button 
+                                                        onClick={() => removePlayer(p.id)}
+                                                        class="text-slate-500 hover:text-red-400 transition-colors p-1 text-sm">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <button 
+                                        onClick={() => setGameState("playing")}
+                                        disabled={players.length < 2}
+                                        class="mt-6 w-full py-4 bg-pink-600 hover:bg-pink-500 text-white font-black rounded-xl text-lg shadow-xl shadow-pink-900/30 transition-all disabled:opacity-50 disabled:pointer-events-none uppercase tracking-wider">
+                                        🚀 開始霓虹棋局 🚀
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    )}
+
+                    {/* --- 正式大富翁對決盤 --- */}
+                    {gameState === "playing" && activeTab === "board" && (
                         <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
                             
-                            {/* 10x10 大富翁棋盤區域 (佔 8 欄) */}
+                            {/* 10x10 大富翁棋盤 */}
                             <div class="xl:col-span-8 bg-slate-950/80 p-4 rounded-3xl border border-purple-500/20 neon-border flex items-center justify-center overflow-auto">
                                 <div class="grid grid-cols-10 grid-rows-10 gap-1.5 w-[760px] h-[760px] relative">
                                     
-                                    {/* 棋盤格子渲染 */}
+                                    {/* 渲染 36 格 */}
                                     {tiles.map((tile, idx) => {
                                         const coords = getCoordinates(idx);
-                                        // 樣式對應
                                         let bgStyle = "";
-                                        let textStyle = "text-slate-100";
-                                        if (tile.type === "red") {
-                                            bgStyle = "bg-gradient-to-br from-red-950 to-red-900 border-red-500/50 hover:border-red-400";
-                                        } else if (tile.type === "orange") {
-                                            bgStyle = "bg-gradient-to-br from-orange-950 to-orange-900 border-orange-500/50 hover:border-orange-400";
-                                        } else if (tile.type === "yellow") {
-                                            bgStyle = "bg-gradient-to-br from-yellow-950 to-yellow-900 border-yellow-500/50 hover:border-yellow-400";
-                                        } else if (tile.type === "blue") {
-                                            bgStyle = "bg-gradient-to-br from-blue-950 to-blue-900 border-blue-500/50 hover:border-blue-400";
-                                        } else {
-                                            bgStyle = "bg-gradient-to-br from-pink-950 to-pink-900 border-pink-500/50 hover:border-pink-400";
-                                        }
+                                        
+                                        if (tile.type === "red") bgStyle = "from-red-950 to-red-900 border-red-500/50 hover:border-red-400";
+                                        else if (tile.type === "orange") bgStyle = "from-orange-950 to-orange-900 border-orange-500/50 hover:border-orange-400";
+                                        else if (tile.type === "yellow") bgStyle = "from-yellow-950 to-yellow-900 border-yellow-500/50 hover:border-yellow-400";
+                                        else if (tile.type === "blue") bgStyle = "from-blue-950 to-blue-900 border-blue-500/50 hover:border-blue-400";
+                                        else bgStyle = "from-pink-950 to-pink-900 border-pink-500/50 hover:border-pink-400";
 
-                                        // 檢查該格是否有玩家停駐
+                                        // 找出落在這格子的所有玩家
                                         const landedPlayers = players.filter(p => p.position === idx);
 
                                         return (
@@ -552,29 +745,23 @@
                                                 key={idx}
                                                 style={{ gridRow: coords.row, gridColumn: coords.col }}
                                                 onClick={() => { setEditingTile(tile); setActiveTab("custom-tiles"); }}
-                                                class={`border rounded-xl p-1.5 flex flex-col justify-between cursor-pointer transition-all hover:scale-105 duration-200 aspect-square ${bgStyle}`}>
+                                                class={`border rounded-xl p-1 flex flex-col justify-between cursor-pointer transition-all hover:scale-105 duration-200 aspect-square bg-gradient-to-br ${bgStyle}`}>
                                                 
-                                                <div class="flex justify-between items-start">
-                                                    <span class="text-[9px] font-mono text-slate-400 bg-black/40 px-1 rounded">
-                                                        #{idx}
-                                                    </span>
-                                                    <span class="text-[9px] font-bold text-purple-300 uppercase">
-                                                        {tile.type}
-                                                    </span>
+                                                <div class="flex justify-between items-start text-[8px] opacity-70">
+                                                    <span class="font-mono bg-black/40 px-1 rounded text-slate-400">#{idx}</span>
+                                                    <span class="uppercase font-semibold text-slate-300">{tile.type}</span>
                                                 </div>
 
-                                                <div class="text-[11px] font-bold text-center leading-tight line-clamp-2 my-auto">
+                                                <div class="text-[10px] font-bold text-center leading-tight line-clamp-2 my-auto px-0.5 text-slate-100">
                                                     {tile.name}
                                                 </div>
 
-                                                {/* 玩家 Token 指示器 */}
-                                                <div class="flex gap-1 justify-center mt-1 h-4">
+                                                {/* 玩家多棋子聚集指示圈 */}
+                                                <div class="flex flex-wrap gap-1 justify-center items-center mt-1 min-h-4">
                                                     {landedPlayers.map(p => (
                                                         <span 
                                                             key={p.id}
-                                                            class={`w-3.5 h-3.5 rounded-full border border-white animate-bounce ${
-                                                                p.color === 'pink' ? 'bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.8)]' : 'bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.8)]'
-                                                            }`}
+                                                            class={`w-3.5 h-3.5 rounded-full border border-white animate-bounce ${getPlayerBgClass(p.color)}`}
                                                             title={p.name}
                                                         />
                                                     ))}
@@ -583,19 +770,21 @@
                                         );
                                     })}
 
-                                    {/* 棋盤內圈控制中心 (2至9行, 2至9列) */}
+                                    {/* 內圈中央控制台 */}
                                     <div class="col-start-2 col-end-10 row-start-2 row-end-10 bg-slate-900/60 rounded-2xl flex flex-col p-6 items-center justify-between gap-4 border border-purple-900/30">
                                         
-                                        {/* 標題與當前玩家顯示 */}
                                         <div class="text-center">
-                                            <h3 class="text-lg text-purple-300 font-mono tracking-wider">NEXT PLAYER</h3>
-                                            <div class="text-3xl font-black mt-1 tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">
-                                                👉 {players[activePlayerIdx].name} 👈
+                                            <h3 class="text-sm text-purple-400 font-mono tracking-widest">CURRENT TURN</h3>
+                                            <div class="text-3xl font-black mt-1 tracking-wide flex items-center justify-center gap-3">
+                                                <span class={`w-4.5 h-4.5 rounded-full border border-white/20 ${getPlayerBgClass(players[activePlayerIdx].color)}`} />
+                                                <span class={getPlayerTextClass(players[activePlayerIdx].color)}>
+                                                    {players[activePlayerIdx].name}
+                                                </span>
                                             </div>
                                         </div>
 
-                                        {/* 3D 骰子 & 操控按鈕 */}
-                                        <div class="flex flex-col items-center gap-6">
+                                        {/* 3D 骰子 */}
+                                        <div class="flex flex-col items-center gap-5">
                                             <div class="dice-scene" onClick={rollDice}>
                                                 <div class="dice cursor-pointer" style={{ transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` }}>
                                                     <div class="dice-face face-1"><span class="w-3 h-3 bg-white rounded-full"></span></div>
@@ -606,57 +795,76 @@
                                                     <div class="dice-face face-6"><span class="grid grid-cols-2 gap-3"><span class="w-2.5 h-2.5 bg-white rounded-full"></span><span class="w-2.5 h-2.5 bg-white rounded-full"></span><span class="w-2.5 h-2.5 bg-white rounded-full"></span><span class="w-2.5 h-2.5 bg-white rounded-full"></span><span class="w-2.5 h-2.5 bg-white rounded-full"></span><span class="w-2.5 h-2.5 bg-white rounded-full"></span></span></div>
                                                 </div>
                                             </div>
+                                            
                                             <button 
                                                 onClick={rollDice}
                                                 disabled={isRolling}
-                                                class="px-8 py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold rounded-full text-lg shadow-lg hover:shadow-purple-500/20 active:scale-95 transition-all disabled:opacity-50">
-                                                {isRolling ? "🎲 滾動中..." : "👉 丟骰子 👈"}
+                                                class="px-8 py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-extrabold rounded-full text-lg shadow-lg shadow-purple-900/40 active:scale-95 transition-all disabled:opacity-50">
+                                                {isRolling ? "🎲 骰子滾動中..." : "👉 丟擲骰子 👈"}
                                             </button>
                                         </div>
 
-                                        {/* 底部裝飾 */}
-                                        <div class="text-center text-xs text-slate-500">
-                                            點擊邊緣任意棋格可直接進行自訂編輯
-                                        </div>
+                                        <button 
+                                            onClick={() => setGameState("setup")}
+                                            class="text-xs text-slate-400 hover:text-slate-200 underline">
+                                            ⚙️ 重新設定玩家大廳 / 目標圈數
+                                        </button>
                                     </div>
 
                                 </div>
                             </div>
 
-                            {/* 狀態日誌與背包系統 (佔 4 欄) */}
-                            <div class="xl:col-span-4 flex flex-col gap-6">
+                            {/* 右側：全體成員狀態看板（四維數據展示） */}
+                            <div class="xl:col-span-4 flex flex-col gap-6 w-full">
                                 
-                                {/* 玩家狀態卡 */}
                                 <div class="bg-slate-950/80 p-5 rounded-2xl border border-purple-500/20">
                                     <h3 class="text-xl font-bold text-purple-400 mb-4 flex items-center gap-2">
-                                        <i class="fa-solid fa-users"></i> 玩家狀態與背包
+                                        <i class="fa-solid fa-users"></i> 全體成員狀態數據
                                     </h3>
-                                    <div class="grid grid-cols-1 gap-4">
+                                    <div class="flex flex-col gap-3 max-h-[350px] overflow-y-auto pr-2">
                                         {players.map((p, idx) => (
                                             <div 
                                                 key={p.id}
-                                                class={`p-4 rounded-xl border transition-all ${
+                                                class={`p-3 rounded-xl border transition-all ${
                                                     activePlayerIdx === idx 
-                                                    ? 'bg-purple-950/30 border-purple-500/60 shadow-lg' 
-                                                    : 'bg-slate-900/50 border-slate-800'
+                                                    ? 'bg-purple-950/20 border-purple-500/80 shadow-[0_0_12px_rgba(168,85,247,0.2)]' 
+                                                    : 'bg-slate-900/40 border-slate-800'
                                                 }`}>
+                                                
                                                 <div class="flex items-center justify-between mb-2">
-                                                    <div class="flex items-center gap-2">
-                                                        <span class={`w-3 h-3 rounded-full ${p.color === 'pink' ? 'bg-pink-500' : 'bg-purple-500'}`} />
-                                                        <span class="font-bold text-lg text-slate-100">{p.name}</span>
+                                                    <div class="flex items-center gap-2 min-w-0">
+                                                        <span class={`w-3.5 h-3.5 rounded-full border border-white/10 ${getPlayerBgClass(p.color)}`} />
+                                                        <span class="font-bold text-slate-100 text-sm truncate">{p.name}</span>
+                                                        {activePlayerIdx === idx && (
+                                                            <span class="text-[9px] bg-pink-500 text-white font-bold px-1.5 py-0.5 rounded animate-pulse">
+                                                                回合中
+                                                            </span>
+                                                        )}
                                                     </div>
-                                                    <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-full font-mono">
-                                                        位置: {p.position} / 35
+                                                    <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">
+                                                        格數: {p.position}/35
                                                     </span>
                                                 </div>
-                                                <div class="grid grid-cols-2 gap-2 text-sm pt-2 border-t border-slate-800/60">
-                                                    <div class="bg-black/30 p-2 rounded text-center">
-                                                        <div class="text-xs text-slate-400">🛡️ 免死金牌</div>
-                                                        <div class="text-lg font-bold text-pink-400">{p.avoidCount} 張</div>
+
+                                                {/* 升級版四維面板 */}
+                                                <div class="grid grid-cols-2 gap-1.5 text-xs pt-1.5 border-t border-slate-800/40">
+                                                    <div class="bg-black/20 px-2 py-1.5 rounded">
+                                                        <span class="text-slate-500 block text-[8px]">🏁 圈數進度</span>
+                                                        <span class="font-bold text-blue-400 font-mono text-[11px]">
+                                                            {p.lap} / {maxLaps === "unlimited" ? "∞" : maxLaps}
+                                                        </span>
                                                     </div>
-                                                    <div class="bg-black/30 p-2 rounded text-center">
-                                                        <div class="text-xs text-slate-400">🩹 累計可抵免</div>
-                                                        <div class="text-lg font-bold text-yellow-400">{p.reduceAmount} 下</div>
+                                                    <div class="bg-black/20 px-2 py-1.5 rounded">
+                                                        <span class="text-slate-500 block text-[8px]">💥 累計被打</span>
+                                                        <span class="font-bold text-red-400 font-mono text-[11px]">{p.punishCount} 次</span>
+                                                    </div>
+                                                    <div class="bg-black/20 px-2 py-1.5 rounded">
+                                                        <span class="text-slate-500 block text-[8px]">🛡️ 免死金牌</span>
+                                                        <span class="font-bold text-pink-400 font-mono text-[11px]">{p.avoidCount} 張</span>
+                                                    </div>
+                                                    <div class="bg-black/20 px-2 py-1.5 rounded">
+                                                        <span class="text-slate-500 block text-[8px]">🩹 累計折抵</span>
+                                                        <span class="font-bold text-yellow-400 font-mono text-[11px]">{p.reduceAmount} 下</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -664,7 +872,7 @@
                                     </div>
                                 </div>
 
-                                {/* 即時遊戲日誌 */}
+                                {/* 日誌記錄 */}
                                 <div class="bg-slate-950/80 p-5 rounded-2xl border border-purple-500/20 flex-grow flex flex-col">
                                     <h3 class="text-xl font-bold text-purple-400 mb-3 flex items-center justify-between">
                                         <span class="flex items-center gap-2">
@@ -676,12 +884,12 @@
                                             清除
                                         </button>
                                     </h3>
-                                    <div class="bg-black/40 p-4 rounded-xl flex-grow h-[350px] overflow-y-auto font-mono text-sm leading-relaxed flex flex-col gap-2.5">
+                                    <div class="bg-black/40 p-4 rounded-xl flex-grow h-[260px] overflow-y-auto font-mono text-sm leading-relaxed flex flex-col gap-2">
                                         {gameLogs.length === 0 ? (
-                                            <div class="text-slate-600 italic text-center my-auto">無日誌紀錄</div>
+                                            <div class="text-slate-600 italic text-center my-auto">無記錄</div>
                                         ) : (
                                             gameLogs.map((log, i) => (
-                                                <div key={i} class="border-b border-purple-950/20 pb-1.5 last:border-0 text-slate-300">
+                                                <div key={i} class="border-b border-purple-950/20 pb-1.5 last:border-0 text-slate-300 text-xs">
                                                     {log}
                                                 </div>
                                             ))
@@ -696,17 +904,17 @@
 
                     {/* 自訂棋格 Tab */}
                     {activeTab === "custom-tiles" && (
-                        <div class="bg-slate-950/80 p-6 rounded-3xl border border-purple-500/20 max-w-4xl mx-auto w-full">
+                        <div class="bg-slate-950/80 p-6 rounded-3xl border border-purple-500/20 max-w-4xl mx-auto w-full animate-fade-in">
                             <h2 class="text-2xl font-black text-pink-500 neon-text-pink mb-2 flex items-center gap-2">
-                                <i class="fa-solid fa-pen-to-square"></i> 棋盤格完全自訂
+                                <i class="fa-solid fa-pen-to-square"></i> 棋盤格配置完全自訂
                             </h2>
                             <p class="text-sm text-slate-400 mb-6">
-                                點擊下方任何一個格子或在棋盤畫面上直接點擊，修改其懲罰項目與配色屬性。
+                                點擊下方任何一個格子或在棋盤畫面上直接點擊，修改其名稱、類別與底色樣式。
                             </p>
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                {/* 選擇列表 */}
-                                <div class="md:col-span-1 bg-black/40 p-4 rounded-2xl max-h-[500px] overflow-y-auto flex flex-col gap-2">
+                                {/* 棋格列表 */}
+                                <div class="bg-black/40 p-4 rounded-2xl max-h-[500px] overflow-y-auto flex flex-col gap-2">
                                     {tiles.map((t) => (
                                         <div 
                                             key={t.id}
@@ -725,8 +933,8 @@
                                     ))}
                                 </div>
 
-                                {/* 編輯細節區 */}
-                                <div class="md:col-span-2 bg-slate-900/40 p-6 rounded-2xl border border-purple-950 flex flex-col justify-between">
+                                {/* 編輯細節 */}
+                                <div class="md:col-span-2 bg-slate-900/40 p-6 rounded-2xl border border-purple-955 flex flex-col justify-between">
                                     {editingTile ? (
                                         <div class="flex flex-col gap-4">
                                             <h3 class="text-xl font-bold text-purple-300 pb-2 border-b border-purple-950">
@@ -734,7 +942,7 @@
                                             </h3>
                                             
                                             <div class="flex flex-col gap-1.5">
-                                                <label class="text-sm text-slate-400">棋格名稱 (顯示於標題)</label>
+                                                <label class="text-sm text-slate-400">棋格名稱 (顯示於大富翁網格中)</label>
                                                 <input 
                                                     type="text"
                                                     value={editingTile.name}
@@ -744,7 +952,7 @@
                                             </div>
 
                                             <div class="flex flex-col gap-1.5">
-                                                <label class="text-sm text-slate-400">詳細執行說明 (描述懲罰道具或數量)</label>
+                                                <label class="text-sm text-slate-400">詳細執行說明</label>
                                                 <textarea 
                                                     rows="3"
                                                     value={editingTile.desc}
@@ -754,8 +962,8 @@
                                             </div>
 
                                             <div class="flex flex-col gap-1.5">
-                                                <label class="text-sm text-slate-400">棋格類別 (影響顏色與觸發規則)</label>
-                                                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                                <label class="text-sm text-slate-400">格子屬性種類</label>
+                                                <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
                                                     {[
                                                         { label: "紅色 (強烈懲罰)", value: "red", color: "bg-red-500" },
                                                         { label: "橘色 (普通懲罰)", value: "orange", color: "bg-orange-500" },
@@ -766,12 +974,12 @@
                                                         <button 
                                                             key={opt.value}
                                                             onClick={() => setEditingTile({ ...editingTile, type: opt.value })}
-                                                            class={`p-2.5 rounded-lg border text-xs font-bold transition-all flex items-center gap-2 ${
+                                                            class={`p-2 rounded-lg border text-[10px] font-bold transition-all flex items-center justify-center gap-1.5 ${
                                                                 editingTile.type === opt.value 
-                                                                ? 'border-white ring-2 ring-purple-500' 
+                                                                ? 'border-white bg-purple-950/40 ring-2 ring-purple-500' 
                                                                 : 'border-slate-800 opacity-60 hover:opacity-100'
                                                             }`}>
-                                                            <span class={`w-2.5 h-2.5 rounded-full ${opt.color}`} />
+                                                            <span class={`w-2 h-2 rounded-full ${opt.color}`} />
                                                             {opt.label.split(" ")[0]}
                                                         </button>
                                                     ))}
@@ -781,12 +989,12 @@
                                             <div class="flex gap-4 mt-6">
                                                 <button 
                                                     onClick={saveTileEdit}
-                                                    class="flex-1 py-3 bg-pink-600 hover:bg-pink-500 rounded-xl font-bold transition-all text-white">
-                                                    💾 保存棋格變更
+                                                    class="flex-1 py-3 bg-pink-600 hover:bg-pink-500 rounded-xl font-bold transition-all text-white text-sm">
+                                                    💾 保存變更
                                                 </button>
                                                 <button 
                                                     onClick={() => setEditingTile(null)}
-                                                    class="py-3 px-6 bg-slate-800 hover:bg-slate-700 rounded-xl font-bold transition-all">
+                                                    class="py-3 px-6 bg-slate-800 hover:bg-slate-700 rounded-xl font-bold transition-all text-sm">
                                                     取消
                                                 </button>
                                             </div>
@@ -794,7 +1002,7 @@
                                     ) : (
                                         <div class="text-center text-slate-500 my-auto py-12 flex flex-col items-center gap-4">
                                             <i class="fa-solid fa-arrow-left text-4xl text-purple-900"></i>
-                                            請從左側點選一格，或直接在棋盤點選格子開始自定義內容。
+                                            請在左側點選，或是直接點選棋盤格子開始更換文字、配置與規則。
                                         </div>
                                     )}
                                 </div>
@@ -802,57 +1010,57 @@
                         </div>
                     )}
 
-                    {/* 自訂卡牌 Tab */}
+                    {/* 命運牌庫 Tab */}
                     {activeTab === "custom-cards" && (
-                        <div class="bg-slate-950/80 p-6 rounded-3xl border border-purple-500/20 max-w-4xl mx-auto w-full">
+                        <div class="bg-slate-950/80 p-6 rounded-3xl border border-purple-500/20 max-w-4xl mx-auto w-full animate-fade-in">
                             <h2 class="text-2xl font-black text-pink-500 neon-text-pink mb-2 flex items-center gap-2">
                                 <i class="fa-solid fa-rectangle-list"></i> 命運卡牌庫管理
                             </h2>
                             <p class="text-sm text-slate-400 mb-6">
-                                您可以隨時新增新的卡牌命令、或將不適合的卡牌移除。現有牌庫總數: <strong class="text-pink-400 font-mono">{cardDeck.length}</strong> 張。
+                                您可以自由增修或廢棄牌庫內的隨機惩罰/功能牌。當前牌庫總數: <strong class="text-pink-400 font-mono">{cardDeck.length}</strong> 張。
                             </p>
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                {/* 新增卡牌區域 */}
+                                {/* 新增卡牌 */}
                                 <div class="bg-slate-900/40 p-5 rounded-2xl border border-purple-950/60 flex flex-col gap-4">
-                                    <h3 class="text-lg font-bold text-purple-300">➕ 新增邪惡卡牌</h3>
+                                    <h3 class="text-lg font-bold text-purple-300">➕ 新增派對命令卡</h3>
                                     
                                     <div class="flex flex-col gap-1.5">
-                                        <label class="text-xs text-slate-400">卡牌文字</label>
+                                        <label class="text-xs text-slate-400">命令內容 (Text)</label>
                                         <input 
                                             type="text"
                                             value={newCardText}
                                             onChange={(e) => setNewCardText(e.target.value)}
-                                            placeholder="例：打陰莖10下"
+                                            placeholder="請輸入懲罰內容或文字..."
                                             class="bg-black/50 border border-purple-900/50 rounded-lg p-2.5 text-slate-100 text-sm focus:outline-none"
                                         />
                                     </div>
 
                                     <div class="flex flex-col gap-1.5">
-                                        <label class="text-xs text-slate-400">卡牌屬性</label>
+                                        <label class="text-xs text-slate-400">指令屬性 (Type)</label>
                                         <select 
                                             value={newCardType} 
                                             onChange={(e) => setNewCardType(e.target.value)}
                                             class="bg-black/50 border border-purple-900/50 rounded-lg p-2.5 text-slate-100 text-sm focus:outline-none">
-                                            <option value="action">即時懲罰 (如被撸、打蛋蛋)</option>
-                                            <option value="keep">功能卡 (存入玩家背包待用)</option>
+                                            <option value="action">普通命令 (抽中立即執行)</option>
+                                            <option value="keep">功能手牌 (存進當前玩家背包待用)</option>
                                             <option value="draw-again">再抽一次</option>
                                         </select>
                                     </div>
 
                                     {newCardType === "keep" && (
                                         <div class="flex flex-col gap-1.5">
-                                            <label class="text-xs text-slate-400">功能卡類別</label>
+                                            <label class="text-xs text-slate-400">折抵價值</label>
                                             <select 
                                                 value={newCardValue} 
                                                 onChange={(e) => setNewCardValue(e.target.value)}
                                                 class="bg-black/50 border border-purple-900/50 rounded-lg p-2.5 text-slate-100 text-sm focus:outline-none">
-                                                <option value="">--請選擇類型--</option>
+                                                <option value="">--請選擇--</option>
                                                 <option value="avoid">免死金牌</option>
-                                                <option value="reduce-5">抵免 5 下</option>
-                                                <option value="reduce-10">抵免 10 下</option>
-                                                <option value="reduce-15">抵免 15 下</option>
-                                                <option value="reduce-20">抵免 20 下</option>
+                                                <option value="reduce-5">折抵 5 下</option>
+                                                <option value="reduce-10">折抵 10 下</option>
+                                                <option value="reduce-15">折抵 15 下</option>
+                                                <option value="reduce-20">折抵 20 下</option>
                                             </select>
                                         </div>
                                     )}
@@ -864,18 +1072,18 @@
                                     </button>
                                 </div>
 
-                                {/* 卡牌列表區域 */}
+                                {/* 卡牌列表 */}
                                 <div class="md:col-span-2 bg-black/40 p-5 rounded-2xl flex flex-col">
-                                    <h3 class="text-lg font-bold text-purple-300 mb-4">📜 當前牌庫卡牌列表</h3>
+                                    <h3 class="text-lg font-bold text-purple-300 mb-4">📜 現存所有命運手牌</h3>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto pr-2">
                                         {cardDeck.map((card) => (
                                             <div 
                                                 key={card.id}
                                                 class="bg-slate-900/80 p-3 rounded-xl border border-purple-900/20 flex items-center justify-between gap-3">
                                                 <div class="flex flex-col min-w-0">
-                                                    <span class="text-[14px] font-bold text-slate-200 truncate">{card.text}</span>
-                                                    <span class="text-[10px] text-pink-400 font-mono mt-0.5 uppercase">
-                                                        {card.type === 'keep' ? `功能卡: ${card.value}` : card.type}
+                                                    <span class="text-sm font-bold text-slate-200 truncate">{card.text}</span>
+                                                    <span class="text-[9px] text-pink-400 font-mono mt-0.5 uppercase">
+                                                        {card.type === 'keep' ? `功能防具: ${card.value}` : card.type}
                                                     </span>
                                                 </div>
                                                 <button 
@@ -891,81 +1099,79 @@
                         </div>
                     )}
 
-                    {/* 規則說明 Tab */}
+                    {/* 玩法規則 Tab */}
                     {activeTab === "rule" && (
-                        <div class="bg-slate-950/80 p-8 rounded-3xl border border-purple-500/20 max-w-3xl mx-auto w-full text-slate-300 leading-relaxed">
+                        <div class="bg-slate-950/80 p-8 rounded-3xl border border-purple-500/20 max-w-3xl mx-auto w-full text-slate-300 leading-relaxed animate-fade-in">
                             <h2 class="text-3xl font-black text-pink-500 neon-text-pink mb-4 text-center">
-                                📜 調教大富翁遊戲規則
+                                📜 調教大富翁進階對決規則
                             </h2>
                             
-                            <div class="space-y-6">
+                            <div class="space-y-6 text-sm">
                                 <div>
-                                    <h3 class="text-xl font-bold text-purple-400 mb-2">🎲 基本玩法</h3>
-                                    <p>每回合玩家輪流擲出骰子，玩家角色會按照點數移動對應的步數。停留在特定棋格時，會依該格顏色觸發不同事件。</p>
+                                    <h3 class="text-lg font-bold text-purple-400 mb-1">🎲 基本遊戲流程</h3>
+                                    <p>在「大廳設定」設定好玩家名稱、棋子顏色與「遊玩目標圈數」。點選「開始棋局」後，大家將輪流投擲骰子，當前玩家將自動行進。跨越起點將使圈數 +1，並實時統計累計挨打記錄！</p>
                                 </div>
 
                                 <div>
-                                    <h3 class="text-xl font-bold text-purple-400 mb-2">🎨 棋格顏色標誌</h3>
-                                    <ul class="list-disc pl-5 space-y-2">
-                                        <li><strong class="text-pink-400">粉色格 (安全沒事)</strong>: 安全無憂，玩家不會受到任何處罰。</li>
-                                        <li><strong class="text-yellow-400">黃色格 (卡牌)</strong>: 玩家需抽取一張隨機卡牌，並執行卡牌上的邪惡指令。</li>
-                                        <li><strong class="text-red-400">紅色 & 橘色格 (懲罰項目)</strong>: 停留在該處的玩家，將由「對方」使用指定的工具執行上面的處罰項目。</li>
-                                        <li><strong class="text-blue-400">藍色格 (特殊動作)</strong>: 包含自動向前 3 步、向後 5 步、或幸運再骰一次。</li>
+                                    <h3 class="text-lg font-bold text-purple-400 mb-1">🎨 格子類別與功能</h3>
+                                    <ul class="list-disc pl-5 space-y-1.5">
+                                        <li><strong class="text-pink-400">粉色安全格</strong>: 幸運免事，安心享受圍觀他人受刑。</li>
+                                        <li><strong class="text-yellow-400">黃色命運格</strong>: 立刻抽取命令卡，大機率獲得羞恥懲罰，小機率獲得背包防禦卡。</li>
+                                        <li><strong class="text-red-400">紅色 & 橘色格 (受罰格)</strong>: 踩中者受罰。點擊完成受罰後，該玩家的累計受罰次數將加 1 次。</li>
+                                        <li><strong class="text-blue-400">藍色事件格</strong>: 包括向前、倒退、或「再骰一次」的幸運獎勵。</li>
                                     </ul>
                                 </div>
 
                                 <div>
-                                    <h3 class="text-xl font-bold text-purple-400 mb-2">🎒 背包與抵免機制</h3>
-                                    <p>當在卡牌格子中抽中 <strong class="text-pink-400">「免死金牌」</strong> 或 <strong class="text-yellow-400">「抵免次數」</strong> 時，該道具會存入當前玩家的背包。在未來的任何處罰事件中，玩家可以透過點擊背包按鈕，來免除本次處罰或折抵痛楚！</p>
+                                    <h3 class="text-lg font-bold text-purple-400 mb-1">🎒 背包與抵免機制</h3>
+                                    <p>在黃色格子抽中「免死金牌」或「折抵次數」時，道具會存入該玩家專屬的防護背包。使用「免死金牌」可以直接抹消該次受罰（且不列入累計挨打統計）；而「折抵」則可在受罰時緩解壓力。</p>
                                 </div>
                             </div>
                         </div>
                     )}
 
                     {/* Footer */}
-                    <footer class="text-center text-xs text-slate-500 mt-6 pb-4">
-                        請理性遊戲，與伴侶遊玩時注意安全與愉悅邊界。此版本支持百分百內容自定義。
+                    <footer class="text-center text-xs text-slate-600 mt-6 pb-4">
+                        此為支持 2-8 人的聚會大富翁，請於健康與伴侶雙方自主、愉悅安全的範疇內娛樂。
                     </footer>
 
-                    {/* --- 彈窗對話框 1：命運卡牌翻開動畫 --- */}
+                    {/* --- 命運卡牌翻開 Modal --- */}
                     {drawnCard && (
-                        <div class="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-fade-in">
-                            <div class="bg-gradient-to-br from-slate-900 to-purple-950 border-2 border-yellow-500 p-8 rounded-3xl max-w-sm w-full text-center shadow-[0_0_30px_rgba(234,179,8,0.3)]">
+                        <div class="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+                            <div class="bg-gradient-to-br from-slate-900 to-purple-950 border-2 border-yellow-500 p-8 rounded-3xl max-w-sm w-full text-center shadow-[0_0_30px_rgba(234,179,8,0.35)] animate-scale-up">
                                 <div class="text-xs font-mono uppercase text-yellow-500 tracking-widest mb-2 font-bold animate-pulse">
-                                    -- CARD DRAWN --
+                                    -- RANDOM CARD DRAWN --
                                 </div>
                                 <div class="w-20 h-28 bg-yellow-500/10 border-2 border-dashed border-yellow-500/50 rounded-xl mx-auto flex items-center justify-center mb-6">
                                     <i class="fa-solid fa-wand-magic-sparkles text-4xl text-yellow-500"></i>
                                 </div>
                                 <h3 class="text-lg font-bold text-slate-300 mb-1">
-                                    【{players[drawnCard.playerIdx].name}】抽到了：
+                                    【<span class={getPlayerTextClass(players[drawnCard.playerIdx].color)}>{players[drawnCard.playerIdx].name}</span>】抽到了：
                                 </h3>
-                                <div class="text-2xl font-black text-white px-4 py-4 bg-black/40 rounded-xl border border-yellow-500/20 mb-6 neon-text-purple">
+                                <div class="text-xl font-black text-white px-4 py-4 bg-black/40 rounded-xl border border-yellow-500/20 mb-6 neon-text-purple">
                                     {drawnCard.text}
                                 </div>
-                                <div class="flex flex-col gap-2.5">
-                                    <button 
-                                        onClick={() => handleCardAction(drawnCard, true)}
-                                        class="w-full py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-black rounded-xl text-md transition-all">
-                                        確定執行 / 納入背包
-                                    </button>
-                                </div>
+                                <button 
+                                    onClick={() => handleCardAction(drawnCard, true)}
+                                    class="w-full py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-black rounded-xl text-md transition-all">
+                                    確定 / 收進背包
+                                </button>
                             </div>
                         </div>
                     )}
 
-                    {/* --- 彈窗對話框 2：懲罰宣告與抵免使用 --- */}
+                    {/* --- 懲罰宣告 & 道具折抵 Modal --- */}
                     {activePunishment && (
-                        <div class="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-fade-in">
-                            <div class="bg-gradient-to-br from-slate-900 to-red-950 border-2 border-red-500 p-8 rounded-3xl max-w-md w-full text-center shadow-[0_0_30px_rgba(239,68,68,0.3)]">
+                        <div class="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+                            <div class="bg-gradient-to-br from-slate-900 to-red-950 border-2 border-red-500 p-8 rounded-3xl max-w-md w-full text-center shadow-[0_0_30px_rgba(239,68,68,0.35)] animate-scale-up">
                                 <div class="text-xs font-mono uppercase text-red-500 tracking-widest mb-2 font-bold animate-pulse">
                                     ⚠️ -- EXECUTE PUNISHMENT -- ⚠️
                                 </div>
                                 <div class="w-16 h-16 bg-red-500/20 rounded-full mx-auto flex items-center justify-center mb-4">
-                                    <i class="fa-solid fa-triangle-exclamation text-3xl text-red-500 animate-bounce"></i>
+                                    <i class="fa-solid fa-triangle-exclamation text-3xl text-red-500"></i>
                                 </div>
                                 <h3 class="text-lg font-bold text-slate-300">
-                                    受罰者：<span class="text-red-400 text-xl font-black">{players[activePunishment.playerIdx].name}</span>
+                                    受罰者：<span class={`text-xl font-black ${getPlayerTextClass(players[activePunishment.playerIdx].color)}`}>{players[activePunishment.playerIdx].name}</span>
                                 </h3>
                                 
                                 <div class="text-2xl font-black text-white px-4 py-5 bg-black/50 rounded-xl border border-red-500/20 my-6">
@@ -975,9 +1181,9 @@
                                     </div>
                                 </div>
 
-                                {/* 被包道具檢索 */}
+                                {/* 背包道具防禦使用 */}
                                 <div class="bg-black/40 p-3 rounded-xl border border-slate-800 mb-6 text-left">
-                                    <div class="text-xs text-slate-400 mb-2">可使用的手牌道具：</div>
+                                    <div class="text-xs text-slate-400 mb-2">檢索可用手牌：</div>
                                     <div class="flex gap-2">
                                         <button 
                                             disabled={players[activePunishment.playerIdx].avoidCount === 0}
@@ -989,21 +1195,85 @@
                                             disabled={players[activePunishment.playerIdx].reduceAmount === 0}
                                             onClick={() => useAvoidCard(activePunishment.playerIdx, 'reduce')}
                                             class="flex-1 py-2 px-3 bg-yellow-900/40 hover:bg-yellow-900/80 border border-yellow-500 rounded-lg text-xs font-bold transition-all disabled:opacity-30 disabled:pointer-events-none">
-                                            🩹 抵免 ({players[activePunishment.playerIdx].reduceAmount}下)
+                                            🩹 折抵 ({players[activePunishment.playerIdx].reduceAmount}下)
                                         </button>
                                     </div>
                                 </div>
 
-                                <div class="flex gap-3">
-                                    <button 
-                                        onClick={() => {
-                                            addLog(`✅ ${players[activePunishment.playerIdx].name} 執行了處罰【${activePunishment.title}】`);
-                                            setActivePunishment(null);
-                                        }}
-                                        class="flex-1 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition-all">
-                                        乖乖受罰 (完成)
-                                    </button>
+                                <button 
+                                    onClick={() => {
+                                        addLog(`✅ 【${players[activePunishment.playerIdx].name}】 履行了處罰【${activePunishment.title}】`);
+                                        // 增加該玩家的挨打記錄
+                                        setPlayers(prev => prev.map((p, idx) => 
+                                            idx === activePunishment.playerIdx 
+                                            ? { ...p, punishCount: p.punishCount + 1 } 
+                                            : p
+                                        ));
+                                        setActivePunishment(null);
+                                    }}
+                                    class="w-full py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition-all">
+                                    乖乖受刑 (完成)
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* --- 終局結算彈窗 (當有玩家完成設定圈數時) --- */}
+                    {winner && (
+                        <div class="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4 backdrop-blur-md">
+                            <div class="bg-gradient-to-br from-slate-900 to-purple-950 border-2 border-pink-500 p-8 rounded-3xl max-w-lg w-full text-center shadow-[0_0_40px_rgba(236,72,153,0.4)] animate-scale-up">
+                                <div class="text-xs font-mono uppercase text-pink-500 tracking-widest mb-2 font-bold animate-pulse">
+                                    🏆 -- GAME COMPLETED -- 🏆
                                 </div>
+                                <div class="w-20 h-20 bg-pink-500/20 rounded-full mx-auto flex items-center justify-center mb-6">
+                                    <i class="fa-solid fa-crown text-4xl text-pink-500 animate-bounce"></i>
+                                </div>
+                                <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 mb-2">
+                                    恭喜 【{winner.name}】 抵達終點！
+                                </h2>
+                                <p class="text-sm text-slate-400 mb-6">
+                                    最先完成了指定的 {maxLaps} 圈挑戰！以下是本次派對的戰況統計：
+                                </p>
+
+                                {/* 挨打次數排行榜統計 */}
+                                <div class="bg-black/40 p-4 rounded-xl border border-purple-900/30 text-left mb-6 flex flex-col gap-3">
+                                    <div class="text-xs text-purple-300 font-bold border-b border-purple-900/40 pb-1.5 flex justify-between">
+                                        <span>📊 各成員「挨打次數」戰報：</span>
+                                        <span class="text-red-400 font-bold">💥 累計痛擊</span>
+                                    </div>
+                                    {players.map((p) => (
+                                        <div key={p.id} class="flex items-center justify-between text-sm">
+                                            <div class="flex items-center gap-2">
+                                                <span class={`w-2.5 h-2.5 rounded-full ${getPlayerBgClass(p.color)}`} />
+                                                <span class="font-bold text-slate-200">{p.name}</span>
+                                                {p.id === winner.id && <span class="text-[10px] text-pink-400 font-bold">(贏家)</span>}
+                                            </div>
+                                            <div class="font-mono text-slate-300">
+                                                累計挨打：<strong class="text-red-400 font-bold text-base">{p.punishCount}</strong> 次
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <button 
+                                    onClick={() => {
+                                        // 重設所有玩家狀態，回到大廳
+                                        setWinner(null);
+                                        setPlayers(prev => prev.map(p => ({
+                                            ...p,
+                                            position: 0,
+                                            avoidCount: 0,
+                                            reduceAmount: 0,
+                                            lap: 1,
+                                            punishCount: 0
+                                        })));
+                                        setActivePlayerIdx(0);
+                                        setGameState("setup");
+                                        addLog("🔄 遊戲已重設，請在 Lobby 重新配置大廳！");
+                                    }}
+                                    class="w-full py-3.5 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-black rounded-xl text-md transition-all shadow-lg hover:shadow-pink-500/20">
+                                    🔄 重新開一局
+                                </button>
                             </div>
                         </div>
                     )}
@@ -1019,8 +1289,8 @@
 </html>
 ```eof
 
-### 🎲 調教大富翁操作技巧：
-1. **丟骰子：** 點擊中間的 3D 骰子，或是底部的「丟骰子」按鈕，骰子會快速立體旋轉並自動判定移動。
-2. **自動觸發規則：** 走到藍色特殊格（例如「向前3步」、「向後5步」）時，系統會等待0.5秒後自動幫角色進行瞬移與二次結算。
-3. **完全自訂：** 想要更改起點打屁股的數量嗎？切換到「自訂棋格」Tab 頁面，點選你想要更改的棋格，就能自由打字、改名字與更換底色！
-4. **功能卡管理：** 卡牌庫自帶數十張刺激又趣味的邪惡與功能性命令，您還可以手動新增自製的專屬調教卡！
+### ⚡️ 快速遊玩指引：
+1. **設定最大圈數**：在「基礎局設設定」下方，有一個「🏁 目標圈數」下拉選單。點選後就能直接套用全域勝利規則。
+2. **挨打計數運作**：在遊戲進行中，每當有人走入紅色/橘色受罰格，在彈窗點選 **「乖乖受刑 (完成)」** 後，他的 `💥 累計被打` 數值將立刻在右側即時加 1。
+3. **終結結算與戰報**：一旦某位玩家最先跨越起點，並使圈數大於您的目標設定，遊戲會立刻中斷，並跳出**「終局戰報統計」**，列出誰是這一局實至名歸的「挨打王」！
+4.遊戲中的懲罰(非打屁股的)若不想執行則可換成打屁股，但次數需+5下。
