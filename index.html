@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>極致霓虹派對大富翁</title>
+    <title>SP派對大富翁</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -147,21 +147,21 @@
         const initialTiles = [
             { id: 0, name: "起點", type: "pink", desc: "安全出發點，摸摸頭打氣" },
             { id: 1, name: "打屁股20下", type: "red", desc: "使用【手】打屁股20下" },
-            { id: 2, name: "墊板打陰莖15下", type: "red", desc: "使用【墊板】敲擊陰莖15下" },
+            { id: 2, name: "木板打屁股15下", type: "red", desc: "使用【木板】 打屁股15下" },
             { id: 3, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 4, name: "打屁股15下", type: "red", desc: "使用【黑膠條】打屁股15下" },
             { id: 5, name: "向前３步", type: "blue", desc: "幸運快速前進！" },
             { id: 6, name: "打手10下", type: "orange", desc: "使用【乒乓拍】打手10下" },
-            { id: 7, name: "乒乓拍打屁股15下", type: "red", desc: "使用【乒乓拍】打屁股15下" },
-            { id: 8, name: "對方選工具打蛋蛋15下", type: "red", desc: "任選工具輕擊蛋蛋15下" },
+            { id: 7, name: "壓克力拍 打屁股15下", type: "red", desc: "使用【壓克力拍】打屁股15下" },
+            { id: 8, name: "對方(主)選工具打屁股15下", type: "red", desc: "貝請主任選工具打屁股15下" },
             { id: 9, name: "安全沒事", type: "pink", desc: "暫時安全，喝口水休息一下" },
-            { id: 10, name: "打陰莖10下", type: "red", desc: "使用【熱熔條】打陰莖10下" },
+            { id: 10, name: "打雞雞10下", type: "red", desc: "使用【熱熔條】打陰莖10下(輕打)" },
             { id: 11, name: "熱熔條打龜頭10下", type: "red", desc: "使用【熱熔條】敲擊龜頭10下" },
             { id: 12, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 13, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 14, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 15, name: "打屁股15下", type: "orange", desc: "普通打屁股15下" },
-            { id: 16, name: "皮帶打屁股10下", type: "red", desc: "使用【皮帶】打屁股10下" },
+            { id: 16, name: "藤條打屁股10下", type: "red", desc: "使用【藤條】打屁股10下" },
             { id: 17, name: "對方選工具安全沒事", type: "pink", desc: "好險！對方選了工具但免罰" },
             { id: 18, name: "打屁股20下", type: "orange", desc: "普通打屁股20下" },
             { id: 19, name: "小紅打屁股30下", type: "red", desc: "使用【小紅】痛擊屁股30下" },
@@ -180,7 +180,7 @@
             { id: 32, name: "打龜頭5下", type: "red", desc: "使用【小紅】打龜頭5下" },
             { id: 33, name: "向後５步", type: "blue", desc: "退後5步！接受命運倒退" },
             { id: 34, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
-            { id: 35, name: "終極懲罰：四部位各20下", type: "red", desc: "屁股、陰莖、龜頭、蛋蛋各打20下！" }
+            { id: 35, name: "終極懲罰：四種工具各20下", type: "red", desc: "屁股被四種各打20下！(其中必須包含藤條)" }
         ];
 
         // --- 預設卡牌庫 ---
