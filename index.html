@@ -134,7 +134,7 @@
                     osc.stop(ctx.currentTime + 0.5);
                 }
             } catch (e) {
-                console.log("Audio context activation requested.");
+                console.log("Audio contexts active.");
             }
         };
 
@@ -142,25 +142,25 @@
         const initialTiles = [
             { id: 0, name: "起點", type: "pink", desc: "安全出發點，摸摸頭打氣" },
             { id: 1, name: "打屁股20下", type: "red", desc: "使用【手】打屁股20下" },
-            { id: 2, name: "木板打陰莖15下", type: "red", desc: "使用【木板】打屁股15下" },
+            { id: 2, name: "木板打屁股15下", type: "red", desc: "使用【木板】敲擊陰莖15下" },
             { id: 3, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 4, name: "打屁股15下", type: "red", desc: "使用【黑膠條】打屁股15下" },
             { id: 5, name: "向前３步", type: "blue", desc: "幸運快速前進！" },
-            { id: 6, name: "手打10下", type: "orange", desc: "使用【巴掌】打屁股10下" },
-            { id: 7, name: "壓克力拍打屁股15下", type: "red", desc: "使用【壓克力拍】打屁股15下" },
-            { id: 8, name: "對方選工具打蛋蛋15下", type: "red", desc: "任選工具輕擊蛋蛋15下" },
+            { id: 6, name: "打屁股10下", type: "orange", desc: "使用【小綠】打手10下" },
+            { id: 7, name: "壓克力拍 打屁股15下", type: "red", desc: "使用【壓克力拍】打屁股15下" },
+            { id: 8, name: "對方選工具打屁股15下", type: "red", desc: "任選工具打屁股15下" },
             { id: 9, name: "安全沒事", type: "pink", desc: "暫時安全，喝口水休息一下" },
-            { id: 10, name: "打屁股10下", type: "red", desc: "使用【大力拍】打屁股10下" },
-            { id: 11, name: "黑膠條打菊花10下", type: "red", desc: "使用【黑膠條】打菊花10下" },
+            { id: 10, name: "打屁股10下", type: "red", desc: "使用【浴刷】打屁股10下" },
+            { id: 11, name: "打屁股10下", type: "red", desc: "使用【大力拍】打屁股10下" },
             { id: 12, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 13, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 14, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 15, name: "打屁股15下", type: "orange", desc: "普通打屁股15下" },
-            { id: 16, name: "打屁股10下", type: "red", desc: "任選打屁股10下" },
+            { id: 16, name: "打屁股10下", type: "red", desc: "使用【大木板】打屁股10下" },
             { id: 17, name: "對方選工具安全沒事", type: "pink", desc: "好險！對方選了工具但免罰" },
             { id: 18, name: "打屁股20下", type: "orange", desc: "普通打屁股20下" },
             { id: 19, name: "小紅打屁股30下", type: "red", desc: "使用【小紅】痛擊屁股30下" },
-            { id: 20, name: "對方選工具打5下", type: "red", desc: "給對方選工打屁股5下" },
+            { id: 20, name: "對方選工具打屁股5下", type: "red", desc: "對方選工具打屁股5下" },
             { id: 21, name: "腳踩一下", type: "orange", desc: "接受腳踩伺候" },
             { id: 22, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
             { id: 23, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
@@ -172,10 +172,10 @@
             { id: 29, name: "安全沒事", type: "pink", desc: "安全度過這回合" },
             { id: 30, name: "打小菊10下", type: "red", desc: "使用【藤條】打小菊10下" },
             { id: 31, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
-            { id: 32, name: "打屁股15下", type: "red", desc: "使用【浴刷】打屁股5下" },
+            { id: 32, name: "打屁股5下", type: "red", desc: "使用【小紅】打屁股5下" },
             { id: 33, name: "向後５步", type: "blue", desc: "退後5步！接受命運倒退" },
             { id: 34, name: "卡牌", type: "yellow", desc: "抽取一張邪惡卡牌" },
-            { id: 35, name: "終極懲罰：四種工具各20下", type: "red", desc: "選擇四種各打20下！(必須包含藤條)" }
+            { id: 35, name: "終極懲罰：四種工具各20下", type: "red", desc: "選擇四種工具各打20下！(其中必須有藤條)" }
         ];
 
         // --- 預設卡牌庫 ---
@@ -214,7 +214,7 @@
             { id: 32, text: "手指插小菊30秒", type: "action" },
             { id: 33, text: "手指插小菊1分鐘", type: "action" },
             { id: 34, text: "手指插小菊3分鐘", type: "action" },
-            { id: 35, text: "罰站3分鐘", type: "action" },
+            { id: 35, text: "電擊器1~3分鐘", type: "action" },
             { id: 36, text: "插尿道1分鐘", type: "action" },
             { id: 37, text: "搔癢30秒", type: "action" },
             { id: 38, text: "搔癢1分鐘", type: "action" },
@@ -229,6 +229,24 @@
             { id: 47, text: "假屌捅到拔出來", type: "action" },
             { id: 48, text: "再抽一次", type: "draw-again" }
         ];
+
+        // 智能語意下數解析器
+        const parseEstimatedHits = (title, desc) => {
+            const text = ((title || "") + " " + (desc || "")).toLowerCase();
+            let multiplier = 1;
+            
+            if (text.includes("四部位各") || text.includes("4部位各") || text.includes("四處") || text.includes("4處")) {
+                multiplier = 4;
+            } else if (text.includes("兩部位") || text.includes("2部位") || text.includes("雙部位") || text.includes("雙邊")) {
+                multiplier = 2;
+            }
+            
+            const match = text.match(/(\d+)\s*下/);
+            if (match) {
+                return parseInt(match[1]) * multiplier;
+            }
+            return 0; 
+        };
 
         // 霓虹代表色
         const colorPalette = [
@@ -247,31 +265,36 @@
             const [tiles, setTiles] = useState(initialTiles);
             const [cardDeck, setCardDeck] = useState(initialCards);
             
-            // 玩家狀態 - 新增 lap (圈數), punishCount (被打次數) 
+            // 玩家狀態 - totalHits 記錄總挨打下數 
             const [players, setPlayers] = useState([
-                { id: 1, name: "主人", color: "pink", position: 0, avoidCount: 0, reduceAmount: 0, lap: 1, punishCount: 0 },
-                { id: 2, name: "小奴", color: "purple", position: 0, avoidCount: 0, reduceAmount: 0, lap: 1, punishCount: 0 }
+                { id: 1, name: "主人", color: "pink", position: 0, avoidCount: 0, reduceAmount: 0, lap: 1, totalHits: 0 },
+                { id: 2, name: "小奴", color: "purple", position: 0, avoidCount: 0, reduceAmount: 0, lap: 1, totalHits: 0 }
             ]);
             
             const [activePlayerIdx, setActivePlayerIdx] = useState(0);
-            const [gameState, setGameState] = useState("setup"); // setup (大廳管理) 或 playing (遊戲進行中)
-            const [maxLaps, setMaxLaps] = useState(2); // 預設目標圈數：2圈
-            const [winner, setWinner] = useState(null); // 終局獲勝玩家
+            const [gameState, setGameState] = useState("setup"); 
+            const [maxLaps, setMaxLaps] = useState(2); 
+            const [winner, setWinner] = useState(null); 
+            const [isEarlyEnd, setIsEarlyEnd] = useState(false); // 標記是否為點擊結束按鈕提前結束
             
-            // 大廳編輯新增玩家暫存
+            // 大廳新增玩家暫存
             const [tempPlayerName, setTempPlayerName] = useState("");
             const [tempPlayerColor, setTempPlayerColor] = useState("blue");
 
-            // 骰子狀態
+            // 3D 骰子
             const [diceVal, setDiceVal] = useState(1);
             const [isRolling, setIsRolling] = useState(false);
             const [rotation, setRotation] = useState({ x: 0, y: 0 });
 
             // 彈窗
             const [drawnCard, setDrawnCard] = useState(null);
+            
+            // 處罰彈窗
             const [activePunishment, setActivePunishment] = useState(null);
-            const [gameLogs, setGameLogs] = useState(["✨ 歡迎來到多人霓虹調教大富翁！請在上方設定您的遊戲人數與圈數。"]);
-            const [activeTab, setActiveTab] = useState("board"); // board, custom-tiles, custom-cards, rule
+            const [punishHits, setPunishHits] = useState(0); 
+            
+            const [gameLogs, setGameLogs] = useState(["✨ 歡迎來到SP大富翁！請在大廳配置人數、圈數，並點擊開始！"]);
+            const [activeTab, setActiveTab] = useState("board"); 
 
             // 編輯器暫存
             const [editingTile, setEditingTile] = useState(null);
@@ -314,7 +337,7 @@
             const addPlayer = () => {
                 if (!tempPlayerName.trim()) return;
                 if (players.length >= 8) {
-                    alert("⚠️ 人數上限為 8 人！");
+                    alert("⚠️ 玩家上限為 8 人！");
                     return;
                 }
                 const newPlayer = {
@@ -325,16 +348,16 @@
                     avoidCount: 0,
                     reduceAmount: 0,
                     lap: 1,
-                    punishCount: 0
+                    totalHits: 0
                 };
                 setPlayers(prev => [...prev, newPlayer]);
                 setTempPlayerName("");
-                addLog(`👥 新成員【${newPlayer.name}】加入了遊戲。`);
+                addLog(`👥 新成員【${newPlayer.name}】進入大廳。`);
             };
 
             const removePlayer = (id) => {
                 if (players.length <= 2) {
-                    alert("⚠️ 遊戲人數至少需要 2 人以上！");
+                    alert("⚠️ 最少需要 2 位玩家！");
                     return;
                 }
                 setPlayers(prev => prev.filter(p => p.id !== id));
@@ -344,13 +367,29 @@
                 setPlayers(prev => prev.map(p => p.id === id ? { ...p, name: newName } : p));
             };
 
-            // --- 走上格子事件邏輯 ---
+            // --- 隨時手動結束遊戲 ---
+            const endGameEarly = () => {
+                const confirmEnd = window.confirm("🚨 確定要提前結束遊戲，並結算目前的挨打戰報嗎？");
+                if (!confirmEnd) return;
+
+                // 排序找出當前圈數最多、格數最前面的領先者
+                const sorted = [...players].sort((a, b) => {
+                    if (a.lap !== b.lap) return b.lap - a.lap;
+                    return b.position - a.position;
+                });
+                
+                setIsEarlyEnd(true);
+                setWinner(sorted[0]); // 設定領先者
+                addLog(`🚨 遊戲由玩家手動提前結束！正在生成當前累積戰報...`);
+            };
+
+            // --- 格子事件邏輯 ---
             const handleTileLanding = (pIdx, position) => {
                 const curPlayer = players[pIdx];
                 const tile = tiles[position];
                 playSound('land');
                 
-                addLog(`📍 【${curPlayer.name}】 停在 [${position}]：【${tile.name}】`);
+                addLog(`📍 【${curPlayer.name}】 抵達 [${position}]格：【${tile.name}】`);
 
                 if (tile.type === "yellow") {
                     setTimeout(() => drawCard(pIdx), 1000);
@@ -358,30 +397,32 @@
                 else if (tile.type === "blue") {
                     if (tile.name.includes("向前３步")) {
                         setTimeout(() => {
-                            addLog(`🚀 觸發【${curPlayer.name}】向前 3 步！`);
+                            addLog(`🚀 觸發向前 3 步！`);
                             movePlayer(pIdx, 3);
                         }, 1200);
                     } else if (tile.name.includes("向後５步")) {
                         setTimeout(() => {
-                            addLog(`↩️ 觸發【${curPlayer.name}】向後 5 步！`);
+                            addLog(`↩️ 觸發向後 5 步！`);
                             movePlayer(pIdx, -5);
                         }, 1200);
                     } else if (tile.name.includes("再骰一次")) {
-                        addLog(`🔥 【${curPlayer.name}】幸運抽中再骰一次機會！`);
+                        addLog(`🔥 狂喜！【${curPlayer.name}】獲得額外一次擲骰機會！`);
                     }
                 } 
                 else if (tile.type === "red" || tile.type === "orange") {
                     playSound('punish');
+                    const estimated = parseEstimatedHits(tile.name, tile.desc);
                     setActivePunishment({
                         title: tile.name,
                         desc: tile.desc || "無詳細說明",
                         playerIdx: pIdx,
                         isCard: false
                     });
+                    setPunishHits(estimated); 
                 }
             };
 
-            // 玩家角色移動與圈數計算邏輯
+            // 移動
             const movePlayer = (pIdx, steps) => {
                 setPlayers(prev => {
                     const updated = [...prev];
@@ -402,23 +443,21 @@
                         }
                     }
 
-                    // 圈數計算
                     if (lapIncrement !== 0) {
                         updated[pIdx].lap = Math.max(1, updated[pIdx].lap + lapIncrement);
                         addLog(`🚩 【${updated[pIdx].name}】 跨越起點！目前圈數：${updated[pIdx].lap} / ${maxLaps === "unlimited" ? "無限制" : maxLaps}`);
                         
-                        // 檢查是否達成目標圈數
                         if (maxLaps !== "unlimited" && updated[pIdx].lap > maxLaps) {
                             setTimeout(() => {
+                                setIsEarlyEnd(false);
                                 setWinner(updated[pIdx]);
-                                addLog(`🏆 遊戲結束！【${updated[pIdx].name}】率先完成了 ${maxLaps} 圈挑戰，成為最終贏家！`);
+                                addLog(`🏆 遊戲結束！【${updated[pIdx].name}】完成了 ${maxLaps} 圈，奪得本局大戰勝利！`);
                             }, 1000);
                         }
                     }
 
                     updated[pIdx].position = nextPos;
                     
-                    // 只要遊戲沒結束就觸發格子事件
                     const isGameOver = maxLaps !== "unlimited" && updated[pIdx].lap > maxLaps;
                     if (!isGameOver) {
                         setTimeout(() => handleTileLanding(pIdx, nextPos), 500);
@@ -451,11 +490,9 @@
                         addLog(`🎲 【${players[activePlayerIdx].name}】 擲出了 ${finalNum} 點！`);
                         movePlayer(activePlayerIdx, finalNum);
 
-                        // 計算下一步落點
                         const nextTargetIndex = (players[activePlayerIdx].position + finalNum) % 36;
                         const currentLandingTile = tiles[nextTargetIndex];
 
-                        // 如果沒踩到「再骰一次」，才切換給下一位玩家
                         if (!currentLandingTile.name.includes("再骰一次")) {
                             setActivePlayerIdx(prev => (prev + 1) % players.length);
                         }
@@ -463,7 +500,7 @@
                 }, 100);
             };
 
-            // 抽命運卡牌
+            // 抽命運卡
             const drawCard = (pIdx) => {
                 playSound('card');
                 const randomCard = cardDeck[Math.floor(Math.random() * cardDeck.length)];
@@ -471,7 +508,7 @@
                 addLog(`🃏 【${players[pIdx].name}】 抽到了命運卡：【${randomCard.text}】`);
             };
 
-            // 處理抽牌結果
+            // 處理抽牌動作
             const handleCardAction = (card, accept) => {
                 const player = players[card.playerIdx];
                 if (accept) {
@@ -489,36 +526,36 @@
                             return updated;
                         });
                     } else if (card.type === "draw-again") {
-                        addLog(`🔄 【${player.name}】 再次抽取卡牌！`);
+                        addLog(`🔄 【${player.name}】 再次抽卡！`);
                         drawCard(card.playerIdx);
                     } else {
                         playSound('punish');
+                        const estimated = parseEstimatedHits(card.text, "");
                         setActivePunishment({
                             title: "卡牌罰則",
                             desc: card.text,
                             playerIdx: card.playerIdx,
                             isCard: true
                         });
+                        setPunishHits(estimated); 
                     }
                 }
                 setDrawnCard(null);
             };
 
-            // 使用防具或抵免
+            // 道具防護
             const useAvoidCard = (pIdx, type) => {
                 setPlayers(prev => {
                     const updated = [...prev];
                     if (type === "avoid" && updated[pIdx].avoidCount > 0) {
                         updated[pIdx].avoidCount -= 1;
-                        addLog(`🛡️ 【${updated[pIdx].name}】 使用了【免死金牌】！免除本次處罰（不增加挨打次數）`);
-                        setActivePunishment(null);
+                        addLog(`🛡️ 【${updated[pIdx].name}】 消耗【免死金牌】！本次受罰下數歸零！`);
+                        setPunishHits(0);
                     } else if (type === "reduce" && updated[pIdx].reduceAmount > 0) {
-                        updated[pIdx].reduceAmount = 0;
-                        addLog(`🩹 【${updated[pIdx].name}】 消耗了所有抵免值，痛楚感大幅度降低。`);
-                        setActivePunishment(prev => {
-                            if (!prev) return null;
-                            return { ...prev, desc: prev.desc + `（玩家已主動折抵傷害！）` };
-                        });
+                        const deduction = Math.min(punishHits, updated[pIdx].reduceAmount);
+                        updated[pIdx].reduceAmount -= deduction;
+                        setPunishHits(prev => Math.max(0, prev - deduction));
+                        addLog(`🩹 【${updated[pIdx].name}】 消耗了 ${deduction} 下折抵值，當前受罰下數降為：${Math.max(0, punishHits - deduction)} 下！`);
                     }
                     return updated;
                 });
@@ -532,7 +569,7 @@
                     updated[editingTile.id] = { ...editingTile };
                     return updated;
                 });
-                addLog(`⚙️ 更新了第 ${editingTile.id} 格為：【${editingTile.name}】`);
+                addLog(`⚙️ 更新了第 ${editingTile.id} 格：【${editingTile.name}】`);
                 setEditingTile(null);
             };
 
@@ -541,7 +578,7 @@
                 setCardDeck(prev => prev.filter(c => c.id !== id));
             };
 
-            // 新增自定義卡牌
+            // 新增自訂卡牌
             const addNewCard = () => {
                 if (!newCardText.trim()) return;
                 const newCard = {
@@ -553,11 +590,11 @@
                 setCardDeck(prev => [...prev, newCard]);
                 setNewCardText("");
                 setNewCardValue("");
-                addLog(`➕ 新増了自訂卡牌到牌庫：【${newCardText}】`);
+                addLog(`➕ 新増了命運卡牌：【${newCardText}】`);
             };
 
             return (
-                <div class="flex flex-col gap-6 select-none">
+                <div class="flex flex-col gap-6 select-none animate-fade-in">
                     
                     {/* Header */}
                     <header class="flex flex-col md:flex-row items-center justify-between border-b border-purple-900/40 pb-4 gap-4">
@@ -566,7 +603,7 @@
                                 <i class="fa-solid fa-chess-board animate-spin-slow"></i> MULTIPLAYER NEON MONOPOLY
                             </h1>
                             <p class="text-xs text-purple-400 mt-1 uppercase tracking-widest font-mono">
-                                伴侶 & 派對專用調教大富翁 - 目標圈數配置與累計被打計數系統
+                                伴侶 & 派對專用調教大富翁 - 讓實踐好玩多更多
                             </p>
                         </div>
                         
@@ -600,25 +637,25 @@
                         </div>
                     </header>
 
-                    {/* --- 大廳 (玩家與目標圈數配置) --- */}
+                    {/* --- 大廳 (人數與圈數配置) --- */}
                     {gameState === "setup" && activeTab === "board" && (
-                        <div class="max-w-4xl mx-auto w-full bg-slate-950/90 p-8 rounded-3xl border border-purple-500/20 neon-border animate-fade-in">
+                        <div class="max-w-4xl mx-auto w-full bg-slate-950/90 p-8 rounded-3xl border border-purple-500/20 neon-border">
                             <h2 class="text-3xl font-black text-pink-500 neon-text-pink mb-2 text-center">
                                 👥 派對玩家大廳 Lobby
                             </h2>
                             <p class="text-slate-400 text-center text-sm mb-8">
-                                請在此設定「目標遊玩圈數」、新增參賽玩家，並可指派專屬霓虹代表色（支持 2~8 人）。
+                                請在此設定「目標圈數」、新增玩家、分派代表色。最高支援 8 人同時挑戰！
                             </p>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 
                                 {/* 左側：新增玩家與圈數設定 */}
-                                <div class="bg-slate-900/50 p-6 rounded-2xl border border-purple-950/60 flex flex-col gap-5">
+                                <div class="bg-slate-900/50 p-6 rounded-2xl border border-purple-955/60 flex flex-col gap-5">
                                     <h3 class="text-lg font-bold text-purple-300">⚙️ 基礎局設設定</h3>
                                     
                                     {/* 圈數自訂 */}
                                     <div class="flex flex-col gap-2">
-                                        <label class="text-xs text-slate-400">🏁 目標圈數 (達到即結束並結算被打王)</label>
+                                        <label class="text-xs text-slate-400">🏁 目標圈數 (達到即結束並結算挨打王)</label>
                                         <select 
                                             value={maxLaps} 
                                             onChange={(e) => {
@@ -688,7 +725,7 @@
                                                     key={p.id}
                                                     class="bg-slate-900/80 p-3 rounded-xl border border-purple-900/10 flex items-center justify-between gap-3">
                                                     <div class="flex items-center gap-3">
-                                                        <span class={`w-4 h-4 rounded-full border border-white/20 ${getPlayerBgClass(p.color)}`} />
+                                                        <span class={`w-4.5 h-4.5 rounded-full border border-white/20 ${getPlayerBgClass(p.color)}`} />
                                                         <input 
                                                             type="text"
                                                             value={p.name}
@@ -710,7 +747,7 @@
                                         onClick={() => setGameState("playing")}
                                         disabled={players.length < 2}
                                         class="mt-6 w-full py-4 bg-pink-600 hover:bg-pink-500 text-white font-black rounded-xl text-lg shadow-xl shadow-pink-900/30 transition-all disabled:opacity-50 disabled:pointer-events-none uppercase tracking-wider">
-                                        🚀 開始霓虹棋局 🚀
+                                        🚀 開始遊戲 🚀
                                     </button>
                                 </div>
 
@@ -737,7 +774,6 @@
                                         else if (tile.type === "blue") bgStyle = "from-blue-950 to-blue-900 border-blue-500/50 hover:border-blue-400";
                                         else bgStyle = "from-pink-950 to-pink-900 border-pink-500/50 hover:border-pink-400";
 
-                                        // 找出落在這格子的所有玩家
                                         const landedPlayers = players.filter(p => p.position === idx);
 
                                         return (
@@ -804,20 +840,29 @@
                                             </button>
                                         </div>
 
-                                        <button 
-                                            onClick={() => setGameState("setup")}
-                                            class="text-xs text-slate-400 hover:text-slate-200 underline">
-                                            ⚙️ 重新設定玩家大廳 / 目標圈數
-                                        </button>
+                                        <div class="flex flex-col items-center gap-2">
+                                            {/* 手動提前結束遊戲按鈕 */}
+                                            <button 
+                                                onClick={endGameEarly}
+                                                class="px-5 py-2 bg-red-950/50 hover:bg-red-900/80 text-red-400 border border-red-500/30 hover:border-red-500/80 rounded-full text-xs font-bold transition-all shadow active:scale-95">
+                                                🚨 提前結束 / 結算戰報
+                                            </button>
+
+                                            <button 
+                                                onClick={() => setGameState("setup")}
+                                                class="text-[11px] text-slate-500 hover:text-slate-300 underline mt-1">
+                                                ⚙️ 重新設定大廳 / 更改玩家
+                                            </button>
+                                        </div>
                                     </div>
 
                                 </div>
                             </div>
 
-                            {/* 右側：全體成員狀態看板（四維數據展示） */}
+                            {/* 右側：全體成員狀態看板 */}
                             <div class="xl:col-span-4 flex flex-col gap-6 w-full">
                                 
-                                <div class="bg-slate-950/80 p-5 rounded-2xl border border-purple-500/20">
+                                <div class="bg-slate-950/80 p-5 rounded-2xl border border-purple-500/20 shadow-md">
                                     <h3 class="text-xl font-bold text-purple-400 mb-4 flex items-center gap-2">
                                         <i class="fa-solid fa-users"></i> 全體成員狀態數據
                                     </h3>
@@ -846,7 +891,6 @@
                                                     </span>
                                                 </div>
 
-                                                {/* 升級版四維面板 */}
                                                 <div class="grid grid-cols-2 gap-1.5 text-xs pt-1.5 border-t border-slate-800/40">
                                                     <div class="bg-black/20 px-2 py-1.5 rounded">
                                                         <span class="text-slate-500 block text-[8px]">🏁 圈數進度</span>
@@ -855,8 +899,8 @@
                                                         </span>
                                                     </div>
                                                     <div class="bg-black/20 px-2 py-1.5 rounded">
-                                                        <span class="text-slate-500 block text-[8px]">💥 累計被打</span>
-                                                        <span class="font-bold text-red-400 font-mono text-[11px]">{p.punishCount} 次</span>
+                                                        <span class="text-slate-500 block text-[8px]">💥 總挨打下數</span>
+                                                        <span class="font-bold text-red-400 font-mono text-[11px]">{p.totalHits} 下</span>
                                                     </div>
                                                     <div class="bg-black/20 px-2 py-1.5 rounded">
                                                         <span class="text-slate-500 block text-[8px]">🛡️ 免死金牌</span>
@@ -904,12 +948,12 @@
 
                     {/* 自訂棋格 Tab */}
                     {activeTab === "custom-tiles" && (
-                        <div class="bg-slate-950/80 p-6 rounded-3xl border border-purple-500/20 max-w-4xl mx-auto w-full animate-fade-in">
+                        <div class="bg-slate-950/80 p-6 rounded-3xl border border-purple-500/20 max-w-4xl mx-auto w-full">
                             <h2 class="text-2xl font-black text-pink-500 neon-text-pink mb-2 flex items-center gap-2">
                                 <i class="fa-solid fa-pen-to-square"></i> 棋盤格配置完全自訂
                             </h2>
                             <p class="text-sm text-slate-400 mb-6">
-                                點擊下方任何一個格子或在棋盤畫面上直接點擊，修改其名稱、類別與底色樣式。
+                                點擊下方任何一個格子或在棋盤畫面上直接點擊，修改其名稱、類別與底色樣式。包含中文字的「下數」（例如：25下）會被系統自動解析捕捉！
                             </p>
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1002,7 +1046,7 @@
                                     ) : (
                                         <div class="text-center text-slate-500 my-auto py-12 flex flex-col items-center gap-4">
                                             <i class="fa-solid fa-arrow-left text-4xl text-purple-900"></i>
-                                            請在左側點選，或是直接點選棋盤格子開始更換文字、配置與規則。
+                                            請在左側點選，或是直接點選棋盤格子開始進行編輯。
                                         </div>
                                     )}
                                 </div>
@@ -1012,17 +1056,17 @@
 
                     {/* 命運牌庫 Tab */}
                     {activeTab === "custom-cards" && (
-                        <div class="bg-slate-950/80 p-6 rounded-3xl border border-purple-500/20 max-w-4xl mx-auto w-full animate-fade-in">
+                        <div class="bg-slate-950/80 p-6 rounded-3xl border border-purple-500/20 max-w-4xl mx-auto w-full">
                             <h2 class="text-2xl font-black text-pink-500 neon-text-pink mb-2 flex items-center gap-2">
                                 <i class="fa-solid fa-rectangle-list"></i> 命運卡牌庫管理
                             </h2>
                             <p class="text-sm text-slate-400 mb-6">
-                                您可以自由增修或廢棄牌庫內的隨機惩罰/功能牌。當前牌庫總數: <strong class="text-pink-400 font-mono">{cardDeck.length}</strong> 張。
+                                隨時在牌庫內增加懲罰、免除或再抽一次。現有牌庫總數: <strong class="text-pink-400 font-mono">{cardDeck.length}</strong> 張。
                             </p>
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 {/* 新增卡牌 */}
-                                <div class="bg-slate-900/40 p-5 rounded-2xl border border-purple-950/60 flex flex-col gap-4">
+                                <div class="bg-slate-900/40 p-5 rounded-2xl border border-purple-955/60 flex flex-col gap-4">
                                     <h3 class="text-lg font-bold text-purple-300">➕ 新增派對命令卡</h3>
                                     
                                     <div class="flex flex-col gap-1.5">
@@ -1031,7 +1075,7 @@
                                             type="text"
                                             value={newCardText}
                                             onChange={(e) => setNewCardText(e.target.value)}
-                                            placeholder="請輸入懲罰內容或文字..."
+                                            placeholder="請輸入含有'下'的文字或命令..."
                                             class="bg-black/50 border border-purple-900/50 rounded-lg p-2.5 text-slate-100 text-sm focus:outline-none"
                                         />
                                     </div>
@@ -1043,7 +1087,7 @@
                                             onChange={(e) => setNewCardType(e.target.value)}
                                             class="bg-black/50 border border-purple-900/50 rounded-lg p-2.5 text-slate-100 text-sm focus:outline-none">
                                             <option value="action">普通命令 (抽中立即執行)</option>
-                                            <option value="keep">功能手牌 (存進當前玩家背包待用)</option>
+                                            <option value="keep">功能手牌 (存進玩家背包)</option>
                                             <option value="draw-again">再抽一次</option>
                                         </select>
                                     </div>
@@ -1101,30 +1145,24 @@
 
                     {/* 玩法規則 Tab */}
                     {activeTab === "rule" && (
-                        <div class="bg-slate-950/80 p-8 rounded-3xl border border-purple-500/20 max-w-3xl mx-auto w-full text-slate-300 leading-relaxed animate-fade-in">
+                        <div class="bg-slate-950/80 p-8 rounded-3xl border border-purple-500/20 max-w-3xl mx-auto w-full text-slate-300 leading-relaxed">
                             <h2 class="text-3xl font-black text-pink-500 neon-text-pink mb-4 text-center">
-                                📜 調教大富翁進階對決規則
+                                📜 調教大富翁對決規則
                             </h2>
                             
                             <div class="space-y-6 text-sm">
                                 <div>
                                     <h3 class="text-lg font-bold text-purple-400 mb-1">🎲 基本遊戲流程</h3>
-                                    <p>在「大廳設定」設定好玩家名稱、棋子顏色與「遊玩目標圈數」。點選「開始棋局」後，大家將輪流投擲骰子，當前玩家將自動行進。跨越起點將使圈數 +1，並實時統計累計挨打記錄！</p>
+                                    <p>在「大廳設定」設定好玩家、棋子顏色與「遊玩目標圈數」。點選「開始棋局」後投擲骰子，跨越起點將使圈數 +1。每個人所承受的痛楚（下數）將被全域累計追蹤！玩累了可以點擊中央控制台下方的「提前結束/結算戰報」按鈕手動結束！</p>
                                 </div>
 
                                 <div>
-                                    <h3 class="text-lg font-bold text-purple-400 mb-1">🎨 格子類別與功能</h3>
+                                    <h3 class="text-lg font-bold text-purple-400 mb-1">🎨 處罰判定與下數折抵</h3>
                                     <ul class="list-disc pl-5 space-y-1.5">
-                                        <li><strong class="text-pink-400">粉色安全格</strong>: 幸運免事，安心享受圍觀他人受刑。</li>
-                                        <li><strong class="text-yellow-400">黃色命運格</strong>: 立刻抽取命令卡，大機率獲得羞恥懲罰，小機率獲得背包防禦卡。</li>
-                                        <li><strong class="text-red-400">紅色 & 橘色格 (受罰格)</strong>: 踩中者受罰。點擊完成受罰後，該玩家的累計受罰次數將加 1 次。</li>
-                                        <li><strong class="text-blue-400">藍色事件格</strong>: 包括向前、倒退、或「再骰一次」的幸運獎勵。</li>
+                                        <li><strong class="text-red-400">處罰格與命令</strong>：踩中或抽中處罰時，系統會從內容中智能抽取出預設執行下數，並展開設定視窗。</li>
+                                        <li><strong class="text-yellow-400">微調與計數</strong>：玩家可以在視窗中手動修改本次的「實際執行下數」，完成後点击確認，下數會即時加載進他的 `totalHits`。</li>
+                                        <li><strong class="text-pink-400">防護手牌</strong>：在受罰時點選【使用折抵】可立刻扣減當前受罰下數；消耗【免死金牌】則可使本次下數直接變為 0。</li>
                                     </ul>
-                                </div>
-
-                                <div>
-                                    <h3 class="text-lg font-bold text-purple-400 mb-1">🎒 背包與抵免機制</h3>
-                                    <p>在黃色格子抽中「免死金牌」或「折抵次數」時，道具會存入該玩家專屬的防護背包。使用「免死金牌」可以直接抹消該次受罰（且不列入累計挨打統計）；而「折抵」則可在受罰時緩解壓力。</p>
                                 </div>
                             </div>
                         </div>
@@ -1132,7 +1170,7 @@
 
                     {/* Footer */}
                     <footer class="text-center text-xs text-slate-600 mt-6 pb-4">
-                        此為支持 2-8 人的聚會大富翁，請於健康與伴侶雙方自主、愉悅安全的範疇內娛樂。
+                        此為聚會調教大富翁，請於健康安全、雙方愉悅範疇內娛樂。
                     </footer>
 
                     {/* --- 命運卡牌翻開 Modal --- */}
@@ -1160,7 +1198,7 @@
                         </div>
                     )}
 
-                    {/* --- 懲罰宣告 & 道具折抵 Modal --- */}
+                    {/* --- 懲罰宣告 & 實際下數判定 Modal --- */}
                     {activePunishment && (
                         <div class="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
                             <div class="bg-gradient-to-br from-slate-900 to-red-950 border-2 border-red-500 p-8 rounded-3xl max-w-md w-full text-center shadow-[0_0_30px_rgba(239,68,68,0.35)] animate-scale-up">
@@ -1168,7 +1206,7 @@
                                     ⚠️ -- EXECUTE PUNISHMENT -- ⚠️
                                 </div>
                                 <div class="w-16 h-16 bg-red-500/20 rounded-full mx-auto flex items-center justify-center mb-4">
-                                    <i class="fa-solid fa-triangle-exclamation text-3xl text-red-500"></i>
+                                    <i class="fa-solid fa-triangle-exclamation text-3xl text-red-500 animate-bounce"></i>
                                 </div>
                                 <h3 class="text-lg font-bold text-slate-300">
                                     受罰者：<span class={`text-xl font-black ${getPlayerTextClass(players[activePunishment.playerIdx].color)}`}>{players[activePunishment.playerIdx].name}</span>
@@ -1181,32 +1219,43 @@
                                     </div>
                                 </div>
 
+                                {/* 智能解析與手動微調下數 */}
+                                <div class="flex items-center justify-center gap-3 bg-black/60 p-4 rounded-xl border border-red-500/20 my-5">
+                                    <span class="text-slate-400 text-sm">實際執行下數：</span>
+                                    <input 
+                                        type="number" 
+                                        value={punishHits} 
+                                        onChange={(e) => setPunishHits(Math.max(0, parseInt(e.target.value) || 0))}
+                                        class="bg-slate-900 border border-red-500/40 rounded-lg p-2.5 w-24 text-center font-bold text-red-400 text-xl focus:outline-none"
+                                    />
+                                    <span class="text-slate-200 font-bold">下</span>
+                                </div>
+
                                 {/* 背包道具防禦使用 */}
                                 <div class="bg-black/40 p-3 rounded-xl border border-slate-800 mb-6 text-left">
-                                    <div class="text-xs text-slate-400 mb-2">檢索可用手牌：</div>
+                                    <div class="text-xs text-slate-400 mb-2">檢索可用手牌 (點擊按鈕執行抵扣)：</div>
                                     <div class="flex gap-2">
                                         <button 
-                                            disabled={players[activePunishment.playerIdx].avoidCount === 0}
+                                            disabled={players[activePunishment.playerIdx].avoidCount === 0 || punishHits === 0}
                                             onClick={() => useAvoidCard(activePunishment.playerIdx, 'avoid')}
                                             class="flex-1 py-2 px-3 bg-pink-900/40 hover:bg-pink-900/80 border border-pink-500 rounded-lg text-xs font-bold transition-all disabled:opacity-30 disabled:pointer-events-none">
                                             🛡️ 免死金牌 ({players[activePunishment.playerIdx].avoidCount})
                                         </button>
                                         <button 
-                                            disabled={players[activePunishment.playerIdx].reduceAmount === 0}
+                                            disabled={players[activePunishment.playerIdx].reduceAmount === 0 || punishHits === 0}
                                             onClick={() => useAvoidCard(activePunishment.playerIdx, 'reduce')}
                                             class="flex-1 py-2 px-3 bg-yellow-900/40 hover:bg-yellow-900/80 border border-yellow-500 rounded-lg text-xs font-bold transition-all disabled:opacity-30 disabled:pointer-events-none">
-                                            🩹 折抵 ({players[activePunishment.playerIdx].reduceAmount}下)
+                                            🩹 抵扣下數 ({players[activePunishment.playerIdx].reduceAmount}下)
                                         </button>
                                     </div>
                                 </div>
 
                                 <button 
                                     onClick={() => {
-                                        addLog(`✅ 【${players[activePunishment.playerIdx].name}】 履行了處罰【${activePunishment.title}】`);
-                                        // 增加該玩家的挨打記錄
+                                        addLog(`✅ 【${players[activePunishment.playerIdx].name}】 執行處罰完成，實打增加 ${punishHits} 下！`);
                                         setPlayers(prev => prev.map((p, idx) => 
                                             idx === activePunishment.playerIdx 
-                                            ? { ...p, punishCount: p.punishCount + 1 } 
+                                            ? { ...p, totalHits: p.totalHits + punishHits } 
                                             : p
                                         ));
                                         setActivePunishment(null);
@@ -1218,38 +1267,41 @@
                         </div>
                     )}
 
-                    {/* --- 終局結算彈窗 (當有玩家完成設定圈數時) --- */}
+                    {/* --- 終局結算彈窗 --- */}
                     {winner && (
                         <div class="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4 backdrop-blur-md">
                             <div class="bg-gradient-to-br from-slate-900 to-purple-950 border-2 border-pink-500 p-8 rounded-3xl max-w-lg w-full text-center shadow-[0_0_40px_rgba(236,72,153,0.4)] animate-scale-up">
                                 <div class="text-xs font-mono uppercase text-pink-500 tracking-widest mb-2 font-bold animate-pulse">
-                                    🏆 -- GAME COMPLETED -- 🏆
+                                    🏆 -- {isEarlyEnd ? "GAME TERMINATED" : "GAME COMPLETED"} -- 🏆
                                 </div>
                                 <div class="w-20 h-20 bg-pink-500/20 rounded-full mx-auto flex items-center justify-center mb-6">
-                                    <i class="fa-solid fa-crown text-4xl text-pink-500 animate-bounce"></i>
+                                    <i class="fa-solid fa-crown text-4xl text-pink-500"></i>
                                 </div>
                                 <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 mb-2">
-                                    恭喜 【{winner.name}】 抵達終點！
+                                    {isEarlyEnd ? "🚨 遊戲已提前結束！" : `恭喜 【${winner.name}】 率先抵達終點！`}
                                 </h2>
                                 <p class="text-sm text-slate-400 mb-6">
-                                    最先完成了指定的 {maxLaps} 圈挑戰！以下是本次派對的戰況統計：
+                                    {isEarlyEnd 
+                                        ? `當前進度最領先的玩家為：【${winner.name}】（第 ${winner.lap} 圈 / 第 ${winner.position} 格）。以下為目前累積的「挨打數總戰報」：`
+                                        : `率先跑完了規定的 ${maxLaps} 圈！以下是各調教受罰成員的「挨打下總戰報」：`
+                                    }
                                 </p>
 
-                                {/* 挨打次數排行榜統計 */}
+                                {/* 排行榜：總共被打多少下 */}
                                 <div class="bg-black/40 p-4 rounded-xl border border-purple-900/30 text-left mb-6 flex flex-col gap-3">
                                     <div class="text-xs text-purple-300 font-bold border-b border-purple-900/40 pb-1.5 flex justify-between">
-                                        <span>📊 各成員「挨打次數」戰報：</span>
-                                        <span class="text-red-400 font-bold">💥 累計痛擊</span>
+                                        <span>📊 各成員戰力統計：</span>
+                                        <span class="text-red-400 font-bold">💥 累計挨打總數</span>
                                     </div>
                                     {players.map((p) => (
                                         <div key={p.id} class="flex items-center justify-between text-sm">
                                             <div class="flex items-center gap-2">
                                                 <span class={`w-2.5 h-2.5 rounded-full ${getPlayerBgClass(p.color)}`} />
                                                 <span class="font-bold text-slate-200">{p.name}</span>
-                                                {p.id === winner.id && <span class="text-[10px] text-pink-400 font-bold">(贏家)</span>}
+                                                {p.id === winner.id && <span class="text-[10px] text-pink-400 font-bold">({isEarlyEnd ? "領先者" : "贏家"})</span>}
                                             </div>
                                             <div class="font-mono text-slate-300">
-                                                累計挨打：<strong class="text-red-400 font-bold text-base">{p.punishCount}</strong> 次
+                                                共挨打：<strong class="text-red-400 font-bold text-base">{p.totalHits}</strong> 下
                                             </div>
                                         </div>
                                     ))}
@@ -1257,22 +1309,22 @@
 
                                 <button 
                                     onClick={() => {
-                                        // 重設所有玩家狀態，回到大廳
                                         setWinner(null);
+                                        setIsEarlyEnd(false);
                                         setPlayers(prev => prev.map(p => ({
                                             ...p,
                                             position: 0,
                                             avoidCount: 0,
                                             reduceAmount: 0,
                                             lap: 1,
-                                            punishCount: 0
+                                            totalHits: 0
                                         })));
                                         setActivePlayerIdx(0);
                                         setGameState("setup");
-                                        addLog("🔄 遊戲已重設，請在 Lobby 重新配置大廳！");
+                                        addLog("🔄 遊戲已全新重設！請在 Lobby 重新配置局設！");
                                     }}
                                     class="w-full py-3.5 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-black rounded-xl text-md transition-all shadow-lg hover:shadow-pink-500/20">
-                                    🔄 重新開一局
+                                    🔄 再來一局挑戰
                                 </button>
                             </div>
                         </div>
@@ -1289,8 +1341,6 @@
 </html>
 ```eof
 
-### ⚡️ 快速遊玩指引：
-1. **設定最大圈數**：在「基礎局設設定」下方，有一個「🏁 目標圈數」下拉選單。點選後就能直接套用全域勝利規則。
-2. **挨打計數運作**：在遊戲進行中，每當有人走入紅色/橘色受罰格，在彈窗點選 **「乖乖受刑 (完成)」** 後，他的 `💥 累計被打` 數值將立刻在右側即時加 1。
-3. **終結結算與戰報**：一旦某位玩家最先跨越起點，並使圈數大於您的目標設定，遊戲會立刻中斷，並跳出**「終局戰報統計」**，列出誰是這一局實至名歸的「挨打王」！
-4.遊戲中的懲罰(非打屁股的)若不想執行則可換成打屁股，但次數需+5下。
+### ⚡️ 更新版操作細節說明：
+1. **如何手動提前結束**：在遊戲進行中，點擊棋盤中央控制台最下方的 **「🚨 提前結束 / 結算戰報」** 紅色按鈕。
+2. **自動判定與排序**：點擊後會彈出瀏覽器二次確認提示，點擊確認後，系統會幫您結算出**當前的最高領先者**，並彈出紅粉色的提前結束戰報視窗！
